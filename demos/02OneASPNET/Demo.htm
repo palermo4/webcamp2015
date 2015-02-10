@@ -1,0 +1,274 @@
+<p><a name="title" /></p>
+
+<h1>One ASP.NET / Hybrid Site</h1>
+
+<hr>
+
+<p><a name="Overview" /></p>
+
+<h2>Overview</h2>
+
+<p>In this demo you will walk through the process of creating a new site using the new One ASP.NET tooling in Visual Sudio. You will start with a Web Forms application, create a simple model &quot;Person&quot; and use the new tooling to scaffold an MVC and a Web Api controller for it.</p>
+
+<p><a id="goals" /></p>
+
+<h3>Goals</h3>
+
+<p>In this demo, you will see how to:</p>
+
+<ol>
+<li>Create a new site using the new One ASP.NET tooling</li>
+<li>Create a simple model &quot;Person&quot;</li>
+<li>Scaffold an MVC controller for Person</li>
+<li>Scaffold a Web API controller for Person</li>
+</ol>
+
+<p><a name="technologies" /></p>
+
+<h3>Key Technologies</h3>
+
+<ul>
+<li><a href="http://www.microsoft.com/visualstudio/eng/visual-studio-2013">Microsoft Visual Studio 2013</a></li>
+<li><a href="http://www.asp.net">ASP.NET</a></li>
+</ul>
+
+<p><a name="Setup" /></p>
+
+<h3>Setup and Configuration</h3>
+
+<p>In order to execute this demo you need to set up your environment.</p>
+
+<ol>
+<li><p>Follow the steps detailed in <a href="http://docs.nuget.org/docs/creating-packages/hosting-your-own-nuget-feeds">this link</a> to setup local sources for the following directories:</p>
+
+<ol>
+<li><strong>C:\Program Files (x86)\Microsoft Web Tools\Packages</strong></li>
+<li><strong>C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Stack 5\Packages</strong></li>
+</ol>
+
+<p><img src="images/nuget-sources.png?raw=true" alt="Nuget Sources">
+</p></li>
+<li><p>Open Visual Studio 2013.</p></li>
+</ol>
+
+<p><a name="Demo" /></p>
+
+<h2>Demo</h2>
+
+<p>This demo is composed of the following segments:</p>
+
+<ol>
+<li><a href="#segment1">Creating a new site</a>.</li>
+<li><a href="#segment2">Creating an MVC Controller using Scaffolding</a>.</li>
+<li><a href="#segment3">Creating a Web API using Scaffolding</a>.</li>
+<li><a href="#segment4">Running the site</a>.</li>
+</ol>
+
+<p><a name="Segment1" /></p>
+
+<h3>Creating a new site</h3>
+
+<ol>
+<li><p>Open the <strong>File / New Project</strong> dialog and show the options in the <strong>Visual C# / Web</strong> section.</p></li>
+<li><p>Name the application <em>MyHybridSite</em> and click <strong>OK</strong>.</p>
+
+<p><img src="images/creating-a-new-project.png?raw=true" alt="Creating a new ASP.NET Web Application project" title="Creating a new ASP.NET Web Application project">
+</p>
+
+<p><em>Creating a new ASP.NET Web Application project</em></p></li>
+<li><p>Select the <strong>Web Forms</strong> template and check the <strong>MVC</strong> and <strong>Web API</strong> options.</p></li>
+<li><p>Click <strong>OK</strong> to create the project.</p>
+
+<p><img src="images/selecting-web-forms-template.png?raw=true" alt="Selecting the Web Forms template" title="Selecting the Web Forms template">
+</p>
+
+<p><em>Creating a new project with the WebForms template, including Web API and MVC libraries.</em></p></li>
+<li><p>Explore the generated solution in the <strong>Solution Explorer</strong>.</p>
+
+<p><img src="images/exploring-the-generated-solution.png?raw=true" alt="Exploring the generated solution" title="Exploring the generated solution">
+</p>
+
+<p><em>Exploring the generated solution</em></p></li>
+<li><p>Open the <strong>Default.aspx</strong> file and show the generated code.</p></li>
+<li><p>Press <strong>F5</strong> to run the web site.</p></li>
+<li><p>Navigate to <strong>/default.aspx</strong>.</p>
+
+<p><img src="images/navigating-to-default-aspx.png?raw=true" alt="Navigating to the default webform" title="Navigating to the default webform">
+</p>
+
+<p><em>Navigating to the default webform</em></p>
+<blockquote>
+<p><strong>Note:</strong> Even if we are on that page, specifying .aspx in the URL emphasizes the fact that this is WebForms.</p>
+</blockquote></li>
+<li><p>Close the browser.</p></li>
+<li><p>Create a new model class named <em>Person</em>. To do that, right-click the <strong>Models</strong> folder, expand the <strong>Add</strong> menu and select <strong>Class...</strong>.</p>
+
+<p><img src="images/adding-a-new-class.png?raw=true" alt="Adding a new model class" title="Adding a new model class">
+</p>
+
+<p><em>Adding a new model class</em></p></li>
+<li><p>Name the file <em>Person.cs</em> and click <strong>Add</strong>.</p>
+
+<p><img src="images/creating-the-person-model-class.png?raw=true" alt="Creating the Person model class" title="Creating the Person model class">
+</p>
+
+<p><em>Creating the Person model class</em></p></li>
+<li><p>Add the highlighted code in the following code snippet to the <strong>Person</strong> class.</p>
+
+<!-- mark:3-7 -->
+
+<pre><code class="C#">public class Person
+{
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public int Age { get; set; }
+}
+</code></pre></li>
+<li><p>Build the solution.</p></li>
+</ol>
+
+<p><a name="Segment2" /></p>
+
+<h3>Creating an MVC Controller using Scaffolding</h3>
+
+<ol>
+<li><p>Create the controller and views for the <em>Person</em> model class using scaffolding. To do that, right-click the <strong>Controllers</strong> folder, expand the <strong>Add</strong> menu and select <strong>New Scaffolded Item...</strong></p>
+
+<p><img src="images/adding-scaffolding-controller.png?raw=true" alt="Creating a new scaffolded Controller" title="Creating a new Controller">
+</p>
+
+<p><em>Creating a new scaffolded Controller</em></p></li>
+<li><p>Select the <strong>MVC 5 Controller with views, using Entity Framework</strong> option in the <strong>Add Scaffold</strong> dialog and click <strong>Add</strong>.</p>
+
+<p><img src="images/selecting-mvc5-controller.png?raw=true" alt="Selecting the MVC 5 Controller with views and Entity Framework" title="Selecting the MVC 5 Controller with views and Entity Framework">
+</p>
+
+<p><em>Selecting the MVC 5 Controller with views and Entity Framework</em></p></li>
+<li><p>Change the name of the controller to <strong>MvcPersonController</strong>.</p>
+
+<p><img src="images/changing-the-controller-name.png?raw=true" alt="Changing the controller name" title="Changing the controller name">
+</p>
+
+<p><em>Changing the controller name</em></p></li>
+<li><p>Check the <strong>Use async controller actions</strong> checkbox.</p>
+
+<p><img src="images/checking-the-async-option.png?raw=true" alt="Checking the use async controller actions checkbox" title="Checking the use async controller actions checkbox">
+</p>
+
+<p><em>Checking the use async controller actions checkbox</em></p></li>
+<li><p>Select <strong>Person</strong> from the <strong>Model class</strong> list.</p>
+
+<p><img src="images/selecting-the-model.png?raw=true" alt="Selecting the Person  model" title="Selecting the Person  model">
+</p>
+
+<p><em>Selecting the Person model</em></p></li>
+<li><p>Create a new data context named <strong>PersonContext</strong>.</p>
+
+<p><img src="images/creating-a-new-context.png?raw=true" alt="Creating the new PersonContext" title="Creating the new PersonContext">
+</p>
+
+<p><em>Creating the new PersonContext</em></p></li>
+<li><p>Finally, click <strong>Add</strong> to create the views and the controller with the default actions.</p>
+
+<p><img src="images/creating-the-mvcperson-controller.png?raw=true" alt="Creating the MvcPerson Controller" title="Creating the MvcPerson Controller">
+</p>
+
+<p><em>Creating the MvcPerson Controller</em></p></li>
+<li><p>In the <strong>Solution Explorer</strong>, expand the <strong>Controllers</strong> folder and show the <strong>MvcPersonController.cs</strong> file, which was just created.</p></li>
+<li><p>Open the <strong>MvcPersonController.cs</strong> file to show the generated code.</p></li>
+<li><p>Expand the <strong>Views</strong> folder and show the new views under the <strong>MvcPerson</strong> folder.</p></li>
+</ol>
+
+<p><a name="Segment3" /></p>
+
+<h3>Creating a Web API using Scaffolding</h3>
+
+<ol>
+<li><p>Create the Web API controller for the <em>Person</em> Model class using scaffolding. To do that, right-click the <strong>Controllers</strong> folder, expand the <strong>Add</strong> menu and select <strong>New Scaffolded Item...</strong></p>
+
+<p><img src="images/adding-scaffolding-controller.png?raw=true" alt="Creating a new scaffolded Controller" title="Creating a new Controller">
+</p>
+
+<p><em>Creating a new scaffolded Controller</em></p></li>
+<li><p>Select the <strong>Web API 2 Controller with actions, using Entity Framework</strong> option in the <strong>Add Scaffold</strong> dialog and click <strong>Add</strong>.</p>
+
+<p><img src="images/creating-a-new-webapi.png?raw=true" alt="Selecting the Web API 2 Controller with actions, using Entity Framework" title="Selecting the Web API 2 Controller with actions, using Entity Framework">
+</p>
+
+<p><em>Selecting the Web API 2 Controller with actions, using Entity Framework</em></p></li>
+<li><p>Change the name of the Web API to <strong>ApiPersonController</strong>.</p></li>
+<li><p>Select <strong>Person</strong> from the <strong>Model class</strong> list.</p>
+
+<p><img src="images/selecting-the-person-model-for-webapi.png?raw=true" alt="Selecting the Person  model" title="Selecting the Person model">
+</p>
+
+<p><em>Selecting the Person model</em></p></li>
+<li><p>If not selected, select the <strong>Use async controller actions</strong> option.</p></li>
+<li><p>Finally, click <strong>Add</strong> to create the API controller with the default actions.</p>
+
+<p><img src="images/creating-the-person-webapi.png?raw=true" alt="Creating the ApiPerson Web API" title="Creating the ApiPerson Web API">
+</p>
+
+<p><em>Creating the ApiPerson Web API</em></p></li>
+<li><p>In <strong>Solution Explorer</strong> expand the <strong>Controller</strong> folder and show the <strong>ApiPersonController.cs</strong> file, which was just created.</p></li>
+<li><p>Open the <strong>ApiPersonController.cs</strong> file to show the generated code.</p></li>
+</ol>
+
+<p><a name="Segment4" /></p>
+
+<h3>Running the site</h3>
+
+<ol>
+<li><p>Press <strong>F5</strong> to run the web site.</p></li>
+<li><p>Navigate to <strong>/MvcPerson</strong> to show the scaffolded view.</p></li>
+<li><p>Start creting a new person by clicking <strong>Create New</strong>. </p>
+
+<p><img src="images/running-mvc-index.png?raw=true" alt="Navigating to the scaffolded MVC views" title="Navigating to the scaffolded MVC views">
+</p>
+
+<p><em>Navigating to the scaffolded MVC views</em></p></li>
+<li><p>Provide values for the fields and click <strong>Create</strong>.</p>
+
+<p><img src="images/running-mvc-creating.png?raw=true" alt="Creating a new person" title="Creating a new person">
+</p>
+
+<p><em>Creating a new person</em></p></li>
+<li><p>Show the new element in the list.</p>
+
+<p><img src="images/running-mvc-listing.png?raw=true" alt="Showing the new element in the index view" title="Showing the new element in the index view">
+</p>
+
+<p><em>Showing the new element in the index view</em></p></li>
+<li><p>Click <strong>Details</strong> and show the person's details.</p>
+
+<p><img src="images/running-mvc-details.png?raw=true" alt="Showing the new element details" title="Showing the new element details">
+</p>
+
+<p><em>Showing the new element details</em></p></li>
+<li><p>Go back to the index page by clicking <strong>Back  to List</strong>.</p></li>
+<li><p>Finally, click on <strong>Delete</strong> to delete the person.</p>
+
+<p><img src="images/running-mvc-deleting.png?raw=true" alt="Deleting the element" title="Deleting the element">
+</p>
+
+<p><em>Deleting the element</em></p></li>
+</ol>
+
+<hr>
+
+<p><a name="summary" /></p>
+
+<h2>Summary</h2>
+
+<p>By completing this demo you should have:</p>
+
+<ul>
+<li>Created a new Web Forms site using the new One ASP.NET template.</li>
+<li>Created a simple model &quot;Person&quot;</li>
+<li>Scaffolded a new MVC controller for Person</li>
+<li>Scaffolded a new Web API controller for Person</li>
+</ul>
+
+<hr>

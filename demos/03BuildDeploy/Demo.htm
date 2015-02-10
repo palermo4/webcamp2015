@@ -1,0 +1,355 @@
+<p><a name="title" /></p>
+
+<h1>Building and Deploying an ASP.NET Application</h1>
+
+<hr>
+
+<p><a name="Overview" /></p>
+
+<h2>Overview</h2>
+
+<p>In this demo you will create a new ASP.NET MVC application using the new One ASP.NET template, explain how routing works in MVC and show the default HomeController and Views. Then you will walk through the process of creating GeekQuiz object model (TriviaQuestion and TriviaOption) and leverage MVC scaffolding to create the controllers and views. Finally, you'll deploy the site to a new Windows Azure web site created from within Visual Studio using the new tooling.</p>
+
+<p><a id="goals" /></p>
+
+<h3>Goals</h3>
+
+<p>In this demo, you will see how to:</p>
+
+<ol>
+<li>Create a new MVC application using the new One ASP.NET tooling</li>
+<li>Create GeekQuiz object model</li>
+<li>Use MVC Scaffolding to create controllers and views for your model</li>
+<li>Create a new web site in Windows Azure and deploy</li>
+</ol>
+
+<p><a name="technologies" /></p>
+
+<h3>Key Technologies</h3>
+
+<ul>
+<li><a href="http://www.microsoft.com/visualstudio/eng/visual-studio-2013">Microsoft Visual Studio 2013</a></li>
+<li><a href="http://www.asp.net/mvc">ASP.NET MVC</a></li>
+<li><a href="http://www.windowsazure.com">Windows Azure</a></li>
+</ul>
+
+<p><a name="Setup" /></p>
+
+<h3>Setup and Configuration</h3>
+
+<p>In order to execute this demo you need to set up your environment.</p>
+
+<ol>
+<li><p>Follow the steps detailed in <a href="http://docs.nuget.org/docs/creating-packages/hosting-your-own-nuget-feeds">this link</a> to setup local sources for the following directories:</p>
+
+<ol>
+<li><strong>C:\Program Files (x86)\Microsoft Web Tools\Packages</strong></li>
+<li><strong>C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET Web Stack 5\Packages</strong></li>
+</ol>
+
+<p><img src="images/nuget-source.png?raw=true" alt="Nuget Sources">
+</p></li>
+<li><p>Visual Studio 2013 running</p></li>
+<li><p>Windows Azure Tools for Visual Studio</p></li>
+<li><p>Windows Azure Subscription</p></li>
+<li><p>Windows Azure subscription imported in Visual Studio</p></li>
+</ol>
+
+<p><a name="Demo" /></p>
+
+<h2>Demo</h2>
+
+<p>This demo is composed of the following segments:</p>
+
+<ol>
+<li><a href="#segment1">Creating the project</a>.</li>
+<li><a href="#segment2">Creating the Controllers using Scaffolding</a></li>
+<li><a href="#segment3">Running the site locally</a></li>
+<li><a href="#segment4">Deploying to Windows Azure Web Sites</a>.</li>
+</ol>
+
+<p><a name="Segment1" /></p>
+
+<h3>Creating the project</h3>
+
+<ol>
+<li><p>Open the <strong>File / New Project</strong> dialog and show the options in the <strong>Visual C# / Web</strong> section.</p>
+
+<p><img src="images/file-new-experience-single-aspnet-web-application-template.png?raw=true" alt="Simplified File/New experience with a single ASP.NET Web application template" title="Simplified File/New experience with a single ASP.NET Web application template">
+</p>
+
+<p><em>Simplified File/New experience with a single ASP.NET Web application template</em></p>
+<blockquote>
+<p><strong>Speaking Point:</strong> </p>
+
+<p>Explain that instead of having to select from many Web templates, now is only &quot;ASP.NET Web Application&quot;. Compare this to the set of templates available in Visual Studio 2012.</p>
+
+<p><img src="images/old-visual-studio-2012-set-of-templates.png?raw=true" alt="Old Visual Studio 2012 set of templates" title="Old Visual Studio 2012 set of templates">
+</p>
+</blockquote></li>
+<li><p>Name the application <em>GeekQuiz</em> and click <strong>OK</strong>.</p></li>
+<li><p>Select new MVC project and check the Web API option.</p>
+
+<p><img src="images/new-aspnet-template-options-for-other-project-types.png?raw=true" alt="New ASP.NET template options for other project types" title="New ASP.NET template options for other project types">
+</p>
+
+<p><em>New ASP.NET template options for other project types</em></p>
+<blockquote>
+<p><strong>Speaking Point:</strong> </p>
+
+<p>Explain the options in the new ASP.NET Project dialog. There are still base templates, but you can include folders and core references for other project types.</p>
+</blockquote></li>
+<li><p>Click <strong>OK</strong> to create the project.</p>
+<blockquote>
+<p><strong>Speaking Point:</strong> </p>
+
+<p>As the project is loading, talk about changes to the project template, including Bootstrap, updates to user authentication, and decoupling the tooling from project types (so Web Forms applications can easily use ASP.NET MVC controllers, etc.)</p>
+</blockquote></li>
+<li><p>Explore the generated solution in the <strong>Solution Explorer</strong>.</p>
+
+<p><img src="images/exploring-the-solution.png?raw=true" alt="Exploring the solution" title="Exploring the solution">
+</p>
+
+<p><em>Exploring the solution</em></p></li>
+<li><p>Open the <strong>Controllers/HomeController.cs</strong> file and show the generated code.</p>
+
+<p><img src="images/exploring-the-controllers.png?raw=true" alt="Exploring the controllers" title="Exploring the controllers">
+</p>
+
+<p><em>Exploring the controllers</em></p></li>
+<li><p>Expand to the <strong>Views/Home</strong> folder and show the generated files.</p>
+
+<p><img src="images/exploring-the-views.png?raw=true" alt="Exploring the views" title="Exploring the views">
+</p>
+
+<p><em>Exploring the views</em></p></li>
+<li><p>Open the <strong>Index.cshtml</strong> file located in the <strong>Views/Home</strong> folder.</p></li>
+<li><p>Open the <strong>App_Start/RouteConfig.cs</strong> file and explain routing.</p>
+<blockquote>
+<p><strong>Speaking Point:</strong> </p>
+
+<p>Note that when accessing to the url ending with /home/index you will be calling the home controller and the index action of that controller. Additionally, the index action is mapped to the cshtml file with the same name inside the home folder. </p>
+</blockquote></li>
+<li><p>Create the GeekQuiz model classes. To do that, right-click the <strong>Model</strong> folder and expand the <strong>Add</strong> menu and select <strong>Class</strong>.</p>
+
+<p><img src="images/creating-a-new-model-class.png?raw=true" alt="Creating a new model class" title="Creating a new model class">
+</p>
+
+<p><em>Creating a new model class</em></p></li>
+<li><p>Name the file <em>TriviaQuestion.cs</em> and click <strong>Add</strong>.</p>
+
+<p><img src="images/creating-the-trivia-question-class.png?raw=true" alt="Creating the TriaviaQuestion class" title="Creating the TriaviaQuestion class">
+</p>
+
+<p><em>Creating the TriaviaQuestion class</em></p></li>
+<li><p>Add the following code to the <strong>TriviaQuestion</strong> class.</p>
+
+<!-- mark:3-8 -->
+
+<pre><code class="C#">public class TriviaQuestion
+{
+    public int Id { get; set; }
+
+    [Required]
+    public string Title { get; set; }
+
+    public virtual List&lt;TriviaOption&gt; Options { get; set; }
+}
+</code></pre></li>
+<li><p>Add the following using statement to the <strong>TriviaQuestion.cs</strong> file.</p>
+
+<pre><code class="C#">using System.ComponentModel.DataAnnotations;
+</code></pre></li>
+<li><p>Repeat steps 10 and 11 to add a new class named <em>TriviaOption</em>.</p></li>
+<li><p>Add the following code to the <strong>TriviaOption</strong> class.</p>
+
+<!-- mark:3-16 -->
+
+<pre><code class="C#">public class TriviaOption
+{
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    [ForeignKey(&quot;TriviaQuestion&quot;)]
+    public int QuestionId { get; set; }
+
+    public virtual TriviaQuestion TriviaQuestion { get; set; }
+
+    [Required]
+    public string Title { get; set; }
+
+    public bool IsCorrect { get; set; }
+}
+</code></pre></li>
+<li><p>Include all the missing using statements.</p></li>
+<li><p>Build the solution.</p></li>
+</ol>
+
+<p><a name="Segment2" /></p>
+
+<h3>Creating the Controllers using Scaffolding</h3>
+
+<ol>
+<li><p>Create the controller to manage the model's CRUD operations. To do that, right-click the <strong>Controllers</strong> folder and expand the <strong>Add</strong> menu and select <strong>Controller...&amp;</strong></p>
+
+<p><img src="images/creating-a-new-controller.png?raw=true" alt="Creating a new Controller" title="Creating a new Controller">
+</p>
+
+<p><em>Creating a new Controller</em></p>
+<blockquote>
+<p><strong>Speaking Point:</strong> </p>
+
+<p>Let's create the controllers and views using scaffolding for each model class. </p>
+</blockquote></li>
+<li><p>Select the <strong>MVC 5 Controller with views, using Entity Framework</strong> option in the <strong>Add Scaffold</strong> dialog and click <strong>Add</strong>.</p>
+
+<p><img src="images/selecting-mvc5-controller.png?raw=true" alt="Selecting the MVC 5 Controller with views and Entity Framework" title="Selecting the MVC 5 Controller with views and Entity Framework">
+</p>
+
+<p><em>Selecting the MVC 5 Controller with views and Entity Framework</em></p></li>
+<li><p>Change the name of the controller to <strong>QuestionController</strong>.</p>
+
+<p><img src="images/changing-the-controller-name.png?raw=true" alt="Changing the controller name" title="Changing the controller name">
+</p>
+
+<p><em>Changing the controller name</em></p></li>
+<li><p>Select <strong>TriviaQuestion</strong> from the <strong>Model class</strong> list.</p>
+
+<p><img src="images/selecting-the-triviaquestion-model.png?raw=true" alt="Selecting the TriviaQuestion model" title="Selecting the TriviaQuestion model">
+</p>
+
+<p><em>Selecting the TriviaQuestion model</em></p></li>
+<li><p>Create a new data context named <strong>TriviaContext</strong>.</p>
+
+<p><img src="images/creating-the-new-triviacontext.png?raw=true" alt="Creating the new TriviaContext" title="Creating the new TriviaContext">
+</p>
+
+<p><em>Creating the new TriviaContext</em></p></li>
+<li><p>Check the <strong>Use async controller actions</strong> checkbox.</p>
+
+<p><img src="images/checking-the-async-option.png?raw=true" alt="Checking the use async controller actions checkbox" title="Checking the use async controller actions checkbox">
+</p>
+
+<p><em>Checking the use async controller actions checkbox</em></p></li>
+<li><p>Finally, click <strong>Add</strong> to create the views and the controller with the default actions.</p>
+
+<p><img src="images/creating-the-questioncontroller.png?raw=true" alt="Creating the QuestionController" title="Creating the QuestionController">
+</p>
+
+<p><em>Creating the QuestionController</em></p></li>
+<li><p>Expand to the <strong>Controller</strong> folder and show the <strong>QuestionController.cs</strong> file, which was just created.</p></li>
+<li><p>Open the <strong>QuestionController.cs</strong> file to show the generated content.</p></li>
+<li><p>Expand the <strong>Views</strong> folder and show the new views under the <strong>Question</strong> folder.</p></li>
+<li><p>Repeat steps 1 through 7 to create the <strong>OptionController</strong> for the <strong>TriviaOption</strong> class using the already existing <strong>TriviaContext</strong>.</p></li>
+</ol>
+
+<p><a name="Segment3" /></p>
+
+<h3>Running the site locally</h3>
+
+<ol>
+<li><p>Press <strong>F5</strong> to run the web site.</p></li>
+<li><p>Navigate to <strong>/question</strong>.</p>
+
+<p><img src="images/navigating-to-question.png?raw=true" alt="Navigating to question" title="Navigating to question">
+</p>
+
+<p><em>Navigating to question</em></p></li>
+<li><p>Add a new question.</p>
+
+<p><img src="images/adding-a-new-question.png?raw=true" alt="Adding a new question" title="Adding a new question">
+</p>
+
+<p><em>Adding a new question</em></p></li>
+<li><p>Navigate to <strong>/option</strong> and add a new option selecting the recently created question in the <strong>QuestionId</strong> field.</p>
+
+<p><img src="images/adding-new-option.png?raw=true" alt="Adding a new option" title="Adding a new option">
+</p>
+
+<p><em>Adding a new option</em></p></li>
+<li><p>Close the browser to stop the solution.</p></li>
+</ol>
+
+<p><a name="Segment4" /></p>
+
+<h3>Deploying to Windows Azure Web Sites</h3>
+
+<ol>
+<li><p>Right-click the <strong>GeekQuiz</strong> project and select <strong>Publish…</strong></p>
+
+<p><img src="images/publishing-the-site.png?raw=true" alt="Publishing the Website" title="Publishing the Website">
+</p>
+
+<p><em>Publishing the Website</em></p></li>
+<li><p>In the Publish dialog box, click <strong>Import…</strong>.</p>
+
+<p><img src="images/importing-a-publish-profile.png?raw=true" alt="Importing the publish profile" title="Importing the publish profile">
+</p>
+
+<p><em>Importing the publish profile</em></p></li>
+<li><p>Select <strong>Import from a Windows Azure web site</strong>. To create a new Windows Azure Web Site, click on <strong>New...</strong>.</p>
+
+<p><img src="images/creating-a-windows-azure-website.png?raw=true" alt="Creating a Windows Azure Website" title="Creating a Windows Azure Website">
+</p>
+
+<p><em>Creating a Windows Azure Website</em></p></li>
+<li><p>The <em>Create site on Windows Azure</em> dialog box will appear. Fill the Site name field and select <strong>Create new server</strong> in the <strong>Database server</strong> list (or use an existing one).</p>
+
+<p><img src="images/creating-a-new-website-dialog.png?raw=true" alt="Create site on Windows Azure dialog" title="Create site on Windows Azure dialog">
+</p>
+
+<p><em>Create site on Windows Azure dialog</em></p>
+<blockquote>
+<p><strong>Speaking Point:</strong> </p>
+
+<p>You can create a new web site without a database, or a new web site with a new database on an existing database server, or a new web site with a new database on a new database server. Fill in all the required information and voila… your new Windows Azure Web Site is ready and you can deploy your web site project there. </p>
+</blockquote></li>
+<li><p>Click <strong>Create</strong> and wait until the site is created.</p>
+
+<p><img src="images/waiting-the-site-to-be-created.png?raw=true" alt="Waiting the site to be created" title="Create site on Windows Azure dialog">
+</p>
+
+<p><em>Waiting for the site to be created</em></p></li>
+<li><p>Back in the <strong>Import Publish Profile</strong> dialog, select the newly created site and click <strong>OK</strong>.</p>
+
+<p><img src="images/importing-the-publish-settings-from-the-new-site.png?raw=true" alt="Importing the Publish Settings file from the new site" title="Importing the Publish Settings file from the new site">
+</p>
+
+<p><em>Importing the Publish Settings file from the new site</em></p></li>
+<li><p>Back in the <strong>Publish Web</strong> dialog, click <strong>Next &gt;</strong>.</p>
+
+<p><img src="images/reviewing-the-connection-settings-to-deploy.png?raw=true" alt="Reviewing the connection settings to deploy" title="Reviewing the connection settings to deploy">
+</p>
+
+<p><em>Reviewing the connection settings to deploy</em></p></li>
+<li><p>In the settings tab, select the new connection string for each context.</p>
+
+<p><img src="images/updating-the-connection-strings.png?raw=true" alt="Updating the connection strings" title="Updating the connection strings">
+</p>
+
+<p><em>Updating the connection strings</em></p></li>
+<li><p>Finally, click <strong>Publish</strong> to publish the site.</p>
+
+<p><img src="images/publishing-the-site-to-azure.png?raw=true" alt="Publishing the site to the new Windows Azure Website" title="Publishing the site to the new Windows Azure Website">
+</p>
+
+<p><em>Publishing the site to the new Windows Azure Website</em></p></li>
+</ol>
+
+<hr>
+
+<p><a name="summary" /></p>
+
+<h2>Summary</h2>
+
+<p>By completing this demo you should have:</p>
+
+<ul>
+<li>Created a new MVC application using the new One ASP.NET template</li>
+<li>Leared how MVC routing, views and controllers work</li>
+<li>Created GeekQuiz object model (TriviaQuestion and TriviaOption)</li>
+<li>Scaffolded the views and controllers for your model</li>
+<li>Created a new web site in Windows Azure and Deployed to it from within Visual Studio</li>
+</ul>
+
+<hr>

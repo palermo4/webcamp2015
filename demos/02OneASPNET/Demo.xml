@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Demo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/ContentFramework.Core.Models">
+	<Id>DemoOneASPNET</Id>
+  <Technologies>
+		<Technology>ASP.NET</Technology>
+	</Technologies>
+	<Author>
+	</Author>
+	<Description>This demonstration shows how the new ASP.NET release makes it easy to incorporate Web Forms, MVC, and Web API into one application.</Description>
+	<Document ConversionType="Html">Demo.md</Document>
+	<Title>Demo - One ASP.NET</Title>
+	<Version>1.0.1</Version>
+	<Source>.\Source</Source>
+	<DependencyChecker>.\Source\Setup\Dependencies.depi</DependencyChecker>
+</Demo>

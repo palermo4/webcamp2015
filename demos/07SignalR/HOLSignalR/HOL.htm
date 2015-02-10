@@ -1,0 +1,538 @@
+<p><a name="HOLTop" /></p>
+
+<h1>Real-Time SignalR</h1>
+
+<hr>
+
+<p><a name="Overview" /></p>
+
+<h2>Overview</h2>
+
+<p>Real-time Web applications feature the ability to push server-side content to the connected clients as it happens, in real-time. For ASP.NET developers, <strong>ASP.NET SignalR</strong> is a library to add real-time web functionality to their applications. It takes advantage of several transports, automatically selecting the best available transport given the client and server's best available transport. It takes advantage of <strong>WebSocket</strong>, an HTML5 API that enables bi-directional communication between the browser and server.</p>
+
+<p><strong>SignalR</strong> also provides a simple, high-level API for doing server to client RPC (call JavaScript functions in your clients' browsers from server-side .NET code) in your ASP.NET application, as well as adding useful hooks for connection management, such as connect/disconnect events, grouping connections, and authorization.</p>
+
+<p><strong>SignalR</strong> is an abstraction over some of the transports that are required to do real-time work between client and server. A <strong>SignalR</strong> connection starts as HTTP, and is then promoted to a <strong>WebSocket</strong> connection if available. <strong>WebSocket</strong> is the ideal transport for <strong>SignalR</strong>, since it makes the most efficient use of server memory, has the lowest latency, and has the most underlying features (such as full duplex communication between client and server), but it also has the most stringent requirements: <strong>WebSocket</strong> requires the server to be using <strong>Windows Server 2012</strong> or <strong>Windows 8</strong>, along with <strong>.NET Framework 4.5</strong>. If these requirements are not met, <strong>SignalR</strong> will attempt to use other transports to make its connections (like <em>Ajax long polling</em>).</p>
+
+<p>The <strong>SignalR</strong> API contains two models for communicating between clients and servers: <strong>Persistent Connections</strong> and <strong>Hubs</strong>. A <strong>Connection</strong> represents a simple endpoint for sending single-recipient, grouped, or broadcast messages. A <strong>Hub</strong> is a more high-level pipeline built upon the Connection API that allows your client and server to call methods on each other directly.</p>
+
+<p><img src="Images/signalr-architecture.png?raw=true" alt="SignalR Architecture">
+</p>
+
+<p><a name="Objectives" /></p>
+
+<h3>Objectives</h3>
+
+<p>In this hands-on lab, you will learn how to:</p>
+
+<ul>
+<li>Send notifications from server to client using SignalR. </li>
+<li>Scale Out your SignalR application using <strong>SQL Server</strong>.</li>
+</ul>
+
+<p><a name="Prerequisites"></a></p>
+
+<h3>Prerequisites</h3>
+
+<p>The following is required to complete this hands-on lab:</p>
+
+<ul>
+<li><a href="http://www.microsoft.com/visualstudio/">Visual Studio Express 2013 for Web</a> or greater</li>
+</ul>
+
+<p><a name="Setup" /></p>
+
+<h3>Setup</h3>
+
+<p>In order to run the exercises in this hands-on lab, you will need to set up your environment first.</p>
+
+<ol>
+<li>Open a Windows Explorer window and browse to the lab's <strong>Source</strong> folder.</li>
+<li>Right-click <strong>Setup.cmd</strong> and select <strong>Run as administrator</strong> to launch the setup process that will configure your environment and install the Visual Studio code snippets for this lab.</li>
+<li>If the User Account Control dialog box is shown, confirm the action to proceed.</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Make sure you have checked all the dependencies for this lab before running the setup.</p>
+</blockquote>
+<p><a name="CodeSnippets" /></p>
+
+<h3>Using the Code Snippets</h3>
+
+<p>Throughout the lab document, you will be instructed to insert code blocks. For your convenience, most of this code is provided as Visual Studio Code Snippets, which you can access from within Visual Studio 2013 to avoid having to add it manually. </p>
+<blockquote>
+<p><strong>Note</strong>: Each exercise is accompanied by a starting solution located in the <strong>Begin</strong> folder of the exercise that allows you to follow each exercise independently of the others. Please be aware that the code snippets that are added during an exercise are missing from these starting solutions and may not  work until you have completed the exercise. Inside the source code for an exercise, you will also find an <strong>End</strong> folder containing a Visual Studio solution with the code that results from completing the steps in the corresponding exercise. You can use these solutions as guidance if you need additional help as you work through this hands-on lab.</p>
+</blockquote>
+<hr>
+
+<p><a name="Exercises" /></p>
+
+<h2>Exercises</h2>
+
+<p>This hands-on lab includes the following exercises:</p>
+
+<ol>
+<li><a href="#Exercise1">Working with Real-Time Data Using SignalR</a></li>
+<li><a href="#Exercise2">Scaling Out Using SQL Server</a></li>
+</ol>
+
+<p>Estimated time to complete this lab: <strong>60 minutes</strong></p>
+<blockquote>
+<p><strong>Note:</strong> When you first start Visual Studio, you must select one of the predefined settings collections. Each predefined collection is designed to match a particular development style and determines window layouts, editor behavior, IntelliSense code snippets, and dialog box options. The procedures in this lab describe the actions necessary to accomplish a given task in Visual Studio when using the <strong>General Development Settings</strong> collection. If you choose a different settings collection for your development environment, there may be differences in the steps that you should take into account.</p>
+</blockquote>
+<p><a name="Exercise1" /></p>
+
+<h3>Exercise 1: Working with Real-Time Data Using SignalR</h3>
+
+<p>While chat is often used as an example, you can do a whole lot more with real-time Web functionality. Any time a user refreshes a web page to see new data or the page implements Ajax long polling to retrieve new data, you can use SignalR.</p>
+
+<p>SignalR supports <strong>server push</strong> or <strong>broadcasting</strong> functionality; it handles connection management automatically. In classic HTTP connections for client-server communication, connection is re-established for each request, but SignalR provides persistent connection between the client and server. In SignalR the server code calls out to a client code in the browser using Remote Procedure Calls (RPC), rather than the request-response model we know today. </p>
+
+<p>In this exercise, you will configure the <strong>Geek Quiz</strong> application to use SignalR to display the Statistics dashboard with the updated metrics without the need to refresh the entire page.</p>
+
+<p><a name="Ex1Task1" /></p>
+
+<h4>Task 1 – Exploring the Geek Quiz Statistics Page</h4>
+
+<p>In this task, you will go through the application and verify how the statistics page is shown and how you can improve the way the information is updated.</p>
+
+<ol>
+<li><p>Open <strong>Visual Studio Express 2013 for Web</strong> and open the <strong>GeekQuiz.sln</strong> solution located in the <strong>Source\Ex1-WorkingWithRealTimeData\Begin</strong> folder.</p></li>
+<li><p>Press <strong>F5</strong> to run the solution. The <strong>Log in</strong> page should appear in the browser.</p>
+
+<p><img src="Images/running-the-solution.png?raw=true" alt="Running the solution" title="Running the solution">
+</p>
+
+<p><em>Running the solution</em></p></li>
+<li><p>Click <strong>Register</strong> in the upper-right corner of the page to create a new user in the application.</p>
+
+<p><img src="Images/register-link.png?raw=true" alt="Register link" title="Register link">
+</p>
+
+<p><em>Register link</em></p></li>
+<li><p>In the <strong>Register</strong> page, enter a <strong>User name</strong> and <strong>Password</strong>, and then click <strong>Register</strong>.</p>
+
+<p><img src="Images/registering-a-user.png?raw=true" alt="Registering a user" title="Registering a user">
+</p>
+
+<p><em>Registering a user</em></p></li>
+<li><p>The application registers the new account and the user is authenticated and redirected back to the home page showing the first quiz question.</p></li>
+<li><p>Open the <strong>Statistics</strong> page in a new window and put the <strong>Home</strong> page and <strong>Statistics</strong> page side-by-side. </p>
+
+<p><img src="Images/side-by-side-windows.png?raw=true" alt="Side-by-side windows" title="Side by side windows">
+</p>
+
+<p><em>Side-by-side windows</em></p></li>
+<li><p>In the <strong>Home</strong> page, answer the question by clicking one of the options. </p>
+
+<p><img src="Images/answering-a-question.png?raw=true" alt="Answering a question" title="Answering a question">
+</p>
+
+<p><em>Answering a question</em></p></li>
+<li><p>After clicking one of the buttons, the answer should appear. </p>
+
+<p><img src="Images/question-answered-correct.png?raw=true" alt="Question answered correct" title="Question answered correct">
+</p>
+
+<p><em>Question answered correctly</em></p></li>
+<li><p>Notice that the information provided in the Statistics page is outdated. Refresh the page in order to see the updated results.</p>
+
+<p><img src="Images/statistics-page.png?raw=true" alt="Statistics page" title="Statistics page">
+</p>
+
+<p><em>Statistics page</em></p></li>
+<li><p>Go back to Visual Studio and stop debugging.</p></li>
+</ol>
+
+<p><a name="Ex1Task2" /></p>
+
+<h4>Task 2 – Adding SignalR to Geek Quiz to Show Online Charts</h4>
+
+<p>In this task, you will add SignalR to the solution and send updates to the clients automatically when a new answer is sent to the server. </p>
+
+<ol>
+<li><p>From the <strong>Tools</strong> menu in Visual Studio, select <strong>Library Package Manager</strong>, and then click <strong>Package Manager Console</strong>. </p></li>
+<li><p>In the <strong>Package Manager Console</strong> window, execute the following command:</p>
+
+<pre><code class="NuGet">Install-Package Microsoft.AspNet.SignalR
+</code></pre>
+
+<p><img src="Images/signalr-package-installation.png?raw=true" alt="SignalR package installation" title="SignalR package installation">
+</p>
+
+<p><em>SignalR package installation</em></p>
+<blockquote>
+<p><strong>Note:</strong> When installing <strong>SignalR</strong> NuGet packages version 2.0.2 from a brand new MVC 5 application, you will need to manually update <strong>OWIN</strong> packages to version 2.0.1 (or higher) before installing SignalR. To do this, you can execute the following script in the <strong>Package Manager Console</strong>:</p>
+
+<pre><code class="NuGet">  get-package | where-object { $_.Id -like &quot;Microsoft.Owin*&quot;} | Update-Package
+</code></pre>
+
+<p>In a future release of SignalR, OWIN dependencies will be automatically updated.</p>
+</blockquote></li>
+<li><p>In <strong>Solution Explorer</strong>, expand the <strong>Scripts</strong> folder and notice that the SignalR <em>js</em> files were added to the solution.</p>
+
+<p><img src="Images/signalr-javascript-references.png?raw=true" alt="SignalR JavaScript references" title="SignalR JavaScript references">
+</p>
+
+<p><em>SignalR JavaScript references</em></p></li>
+<li><p>In <strong>Solution Explorer</strong>, right-click the <strong>GeekQuiz</strong> project, select <strong>Add</strong> | <strong>New Folder</strong>, and name it  <strong>Hubs</strong>.</p></li>
+<li><p>Right-click the <strong>Hubs</strong> folder and select <strong>Add | New Item</strong>. </p>
+
+<p><img src="Images/add-new-item.png?raw=true" alt="Add new item" title="Add new item">
+    </p>
+
+<p><em>Add new item</em></p></li>
+<li><p>In the <strong>Add New Item</strong> dialog box, select the <strong>Visual C# | Web | SignalR</strong> node in the left pane, select <strong>SignalR Hub Class (v2)</strong> from the center pane, name the file <strong>StatisticsHub.cs</strong> and click <strong>Add</strong>. </p>
+
+<p><img src="Images/add-new-item-dialog-box.png?raw=true" alt="Add new item dialog box" title="Add new item dialog box">
+</p>
+
+<p><em>Add new item dialog box</em></p></li>
+<li><p>Replace the code in the <strong>StatisticsHub</strong> class with the following code.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - StatisticsHubClass</em>)</p>
+
+<!--mark: 1-8-->
+
+<pre><code class="C#">namespace GeekQuiz.Hubs
+{
+     using Microsoft.AspNet.SignalR;
+
+     public class StatisticsHub : Hub
+     {
+     }
+}
+</code></pre></li>
+<li><p>Open <strong>Startup.cs</strong> and add the following line at the end of the <strong>Configuration</strong> method.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - MapSignalR</em>)</p>
+
+<!--mark: 4-->
+
+<pre><code class="C#">public void Configuration(IAppBuilder app)
+{
+    this.ConfigureAuth(app);
+    app.MapSignalR();
+}
+</code></pre></li>
+<li><p>Open the <strong>StatisticsService.cs</strong> page inside the <strong>Services</strong> folder and add the following using directives.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - UsingDirectives</em>)</p>
+
+<!--mark: 1-2-->
+
+<pre><code class="C#">using Microsoft.AspNet.SignalR;
+using GeekQuiz.Hubs;
+</code></pre></li>
+<li><p>To notify connected clients of updates, you first retrieve a <strong>Context</strong> object for the current connection. The <strong>Hub</strong> object contains methods to send messages to a single client or broadcast to all connected clients. Add the following method to the <strong>StatisticsService</strong> class to broadcast the statistics data.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - NotifyUpdatesMethod</em>)</p>
+
+<!--mark: 1-9-->
+
+<pre><code class="C#">public async Task NotifyUpdates()
+{
+    var hubContext = GlobalHost.ConnectionManager.GetHubContext&lt;StatisticsHub&gt;();
+    if (hubContext != null)
+    {
+         var stats = await this.GenerateStatistics();
+         hubContext.Clients.All.updateStatistics(stats);
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> In the code above, you are using an arbitrary method name to call a function on the client (i.e.: <em>updateStatistics</em>). The method name that you specify is interpreted as a dynamic object, which means there is no IntelliSense or compile-time validation for it. The expression is evaluated at run time. When the method call executes, SignalR sends the method name and the parameter values to the client. If the client has a method that matches the name, that method is called and the parameter values are passed to it. If no matching method is found on the client, no error is raised. For more information, refer to <a href="http://www.asp.net/signalr/overview/signalr-20/hubs-api/hubs-api-guide-server">http://www.asp.net/signalr/overview/signalr-20/hubs-api/hubs-api-guide-server</a>.</p>
+</blockquote></li>
+<li><p>Open the <strong>TriviaController.cs</strong> page inside the <strong>Controllers</strong> folder and add the following using directives.</p>
+
+<!--mark: 1--->
+
+<pre><code class="C#">using GeekQuiz.Services;
+</code></pre></li>
+<li><p>Add the following highlighted code to the <strong>Post</strong> action method.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - NotifyUpdatesCall</em>)</p>
+
+<!--mark: 12-13-->
+
+<pre><code class="C#">public async Task&lt;IHttpActionResult&gt; Post(TriviaAnswer answer)
+{
+    if (!ModelState.IsValid)
+    {
+         return this.BadRequest(this.ModelState);
+    }
+
+    answer.UserId = User.Identity.Name;
+
+    var isCorrect = await this.StoreAsync(answer);
+
+    var statisticsService = new StatisticsService(this.db);
+    await statisticsService.NotifyUpdates();
+
+    return this.Ok&lt;bool&gt;(isCorrect);
+}
+</code></pre></li>
+<li><p>Open the <strong>Statistics.cshtml</strong> page inside the <strong>Views | Home</strong> folder. Locate the <strong>Scripts</strong> section and add the following script references at the beginning of the section.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - SignalRScriptReferences</em>)</p>
+
+<!--mark: 2-3-->
+
+<pre><code class="HTML">@section Scripts {
+    @Scripts.Render(&quot;~/Scripts/jquery.signalR-2.0.2.min.js&quot;);
+    @Scripts.Render(&quot;~/signalr/hubs&quot;);
+    ...
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> When you add SignalR and other script libraries to your Visual Studio project, the Package Manager might install a version of the SignalR script file that is more recent than the version shown in this topic. Make sure that the script reference in your code matches the version of the script library installed in your project.</p>
+</blockquote></li>
+<li><p>Add the following highlighted code to connect the client to the SignalR hub and update the statistics data when a new message is received from the hub.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex1 - SignalRClientCode</em>)</p>
+
+<!-- mark:6-16 -->
+
+<pre><code class="JavaScript">@section Scripts {
+    ...
+    &lt;script&gt;
+        ...
+
+        var connection = $.hubConnection();
+        var hub = connection.createHubProxy(&quot;StatisticsHub&quot;);
+        hub.on(&quot;updateStatistics&quot;, function (statistics) {
+                statisticsData = statistics;
+                $(&quot;#correctAnswersCounter&quot;).text(statistics.CorrectAnswers);
+                $(&quot;#incorrectAnswersCounter&quot;).text(statistics.IncorrectAnswers);
+
+                showCharts(statisticsData);
+          });
+
+        connection.start();
+    &lt;/script&gt;
+}
+</code></pre>
+
+<p>In this code, you are creating a Hub Proxy and registering an event handler to listen for messages sent by the server. In this case, you listen for messages sent through the <em>updateStatistics</em> method.</p></li>
+</ol>
+
+<p><a name="Ex1Task3" /></p>
+
+<h4>Task 3 – Running the Solution</h4>
+
+<p>In this task, you will run the solution to verify that the statistics view is updated automatically using SignalR after answering a new question.</p>
+
+<ol>
+<li><p>Press <strong>F5</strong> to run the solution. </p>
+<blockquote>
+<p><strong>Note:</strong> If not already logged in to the application, log in with the user you created in Task 1.</p>
+</blockquote></li>
+<li><p>Open the <strong>Statistics</strong> page in a new window and put the <strong>Home</strong> page and <strong>Statistics</strong> page side-by-side as you did in Task 1.</p></li>
+<li><p>In the <strong>Home</strong> page, answer the question by clicking one of the options. </p>
+
+<p><img src="Images/answering-another-question.png?raw=true" alt="Answering another question" title="Answering another question">
+</p>
+
+<p><em>Answering another question</em></p></li>
+<li><p>After clicking one of the buttons, the answer should appear. Notice that the Statistics information on the page is updated automatically after answering the question with the updated information without the need to refresh the entire page.</p>
+
+<p><img src="Images/statistics-page-refreshed-after-answer.png?raw=true" alt="Statistics page refreshed after answer" title="Statistics page refreshed after answer">
+</p>
+
+<p><em>Statistics page refreshed after answer</em></p></li>
+</ol>
+
+<p><a name="Exercise2" /></p>
+
+<h3>Exercise 2: Scaling Out Using SQL Server</h3>
+
+<p>When scaling a web application, you can generally choose between <em>scaling up</em> and <em>scaling out</em> options. <em>Scale up</em> means using a larger server, with more resources (CPU, RAM, etc.) while <em>scale out</em> means adding more servers to handle the load.   The problem with the latter is that the clients can get routed to different servers. A client that is connected to one server will not receive messages sent from another server.</p>
+
+<p>You can solve these issues by using a component called <em>backplane</em>, to forward messages between servers. With a backplane enabled, each application instance sends messages to the backplane, and the backplane forwards them to the other application instances.</p>
+
+<p>There are currently three types of backplanes for SignalR:</p>
+
+<ul>
+<li><strong>Windows Azure Service Bus</strong>. Service Bus is a messaging infrastructure that allows components to send loosely coupled messages. </li>
+<li><strong>SQL Server</strong>. The SQL Server backplane writes messages to SQL tables. The backplane uses Service Broker for efficient messaging. However, it also works if Service Broker is not enabled.</li>
+<li><strong>Redis</strong>. Redis is an in-memory key-value store. Redis supports a publish/subscribe (“pub/sub”) pattern for sending messages. </li>
+</ul>
+
+<p>Every message is sent through a message bus. A message bus implements the <a href="http://msdn.microsoft.com/en-us/library/microsoft.aspnet.signalr.messaging.imessagebus(v=vs.100).aspx">IMessageBus</a> interface, which provides a publish/subscribe abstraction. The backplanes work by replacing the default <strong>IMessageBus</strong> with a bus designed for that backplane.</p>
+
+<p>Each server instance connects to the backplane through the bus. When a message is sent, it goes to the backplane, and the backplane sends it to every server. When a server receives a message from the backplane, it stores the message in its local cache. The server then delivers messages to clients from its local cache.</p>
+
+<p>For more information about how the SignalR backplane works, read this <a href="http://www.asp.net/signalr/overview/signalr-20/performance-and-scaling/scaleout-in-signalr">article</a>.</p>
+<blockquote>
+<p><strong>Note:</strong> There are some scenarios where a backplane can become a bottleneck. Here are some typical SignalR scenarios:</p>
+
+<ul>
+<li><p><a href="http://www.asp.net/signalr/overview/signalr-20/getting-started-with-signalr-20/tutorial-server-broadcast-with-signalr-20">Server broadcast</a> (e.g., stock ticker): Backplanes work well for this scenario, because the server controls the rate at which messages are sent.</p></li>
+<li><p><a href="http://www.asp.net/signalr/overview/signalr-20/getting-started-with-signalr-20/tutorial-getting-started-with-signalr-20">Client-to-client</a> (e.g., chat): In this scenario, the backplane might be a bottleneck if the number of messages scales with the number of clients; that is, if the rate of messages grows proportionally as more clients join. </p></li>
+<li><p><a href="http://www.asp.net/signalr/overview/signalr-20/getting-started-with-signalr-20/tutorial-high-frequency-realtime-with-signalr-20">High-frequency realtime</a> (e.g., real-time games): A backplane is not recommended for this scenario.</p></li>
+</ul>
+</blockquote>
+<p>In this exercise, you will use <strong>SQL Server</strong> to distribute messages across the <strong>Geek Quiz</strong> application. You will run these tasks on a single test machine to learn how to set up the configuration, but in order to get the full effect, you will need to deploy the SignalR application to two or more servers. You must also install SQL Server on one of the servers, or on a separate dedicated server.</p>
+
+<p><img src="Images/scale-out-using-sql-server-diagram.png?raw=true" alt="Scale Out Using SQL Server Diagram">
+</p>
+
+<p><a name="Ex2Task1" /></p>
+
+<h4>Task 1 - Understanding the Scenario</h4>
+
+<p>In this task, you will run 2 instances of <strong>Geek Quiz</strong> simulating multiple IIS instances on your local machine. In this scenario, when answering trivia questions on one application, update won't be notified on the statistics page of the second instance. This simulation resembles an environment where your application is deployed on multiple instances and using a load balancer to communicate with them.</p>
+
+<ol>
+<li><p>Open the <strong>Begin.sln</strong> solution located in the <strong>Source/Ex2-ScalingOutWithSQLServer/Begin</strong> folder. Once loaded, you will notice on the <strong>Server Explorer</strong> that the solution has two projects with identical structures but different names. This will simulate running two instances of the same application on your local machine.</p>
+
+<p><img src="Images/begin-solution-simulating-2-instances-of-geek.png?raw=true" alt="Begin Solution Simulating 2 Instances of Geek Quiz" title="Begin Solution Simulating 2 Instances of Geek Quiz">
+</p>
+
+<p><em>Begin Solution Simulating 2 Instances of Geek Quiz</em></p></li>
+<li><p>Open the properties page of the solution by right-clicking the solution node and selecting <strong>Properties</strong>. Under <strong>Startup Project</strong>, select <strong>Multiple startup projects</strong> and change the <strong>Action</strong> value for both projects to <em>Start</em>.</p>
+
+<p><img src="Images/starting-multiple-projects.png?raw=true" alt="Starting Multiple Projects" title="Starting Multiple Projects">
+</p>
+
+<p><em>Starting Multiple Projects</em></p></li>
+<li><p>Press <strong>F5</strong> to run the solution. The application will launch two instances of <strong>Geek Quiz</strong> in different ports, simulating multiple instances of the same application. Pin one of the browsers on left and the other on the right of your screen. Log in with your credentials or register a new user. Once logged in, keep the Trivia page on the left and go to the <strong>Statistics</strong> page in the browser on the right.</p>
+
+<p><img src="Images/geek-quiz-side-by-side.png?raw=true" alt="Geek Quiz Side by Side">
+</p>
+
+<p><em>Geek Quiz Side by Side</em></p>
+
+<p><img src="Images/geek-quiz-in-different-ports.png?raw=true" alt="Geek Quiz in Different Ports">
+</p>
+
+<p><em>Geek Quiz in Different Ports</em></p></li>
+<li><p>Start answering questions in the left browser and you will notice that the <strong>Statistics</strong> page in the right browser is not being updated. This is because <strong>SignalR</strong> uses a local cache to distribute messages across their clients and this scenario is simulating multiple instances, therefore the cache is not shared between them. You can verify that <strong>SignalR</strong> is working by testing the same steps but using a single app. In the following tasks you will configure a backplane to replicate the messages across instances.</p></li>
+<li><p>Go back to Visual Studio and stop debugging.</p></li>
+</ol>
+
+<p><a name="Ex2Task2" /></p>
+
+<h4>Task 2 – Creating the SQL Server Backplane</h4>
+
+<p>In this task, you will create a database that will serve as a backplane for the <strong>Geek Quiz</strong> application. You will use <strong>SQL Server Object Explorer</strong> to browse your server and initialize the database. Additionally, you will enable the <strong>Service Broker</strong>.</p>
+
+<ol>
+<li><p>In <strong>Visual Studio</strong>, open menu <strong>View</strong> and select <strong>SQL Server Object Explorer</strong>.</p></li>
+<li><p>Connect to your LocalDB instance by right-clicking the <strong>SQL Server</strong> node and selecting <strong>Add SQL Server...</strong> option.</p>
+
+<p><img src="Images/adding-sql-server-instance.png?raw=true" alt="Adding a SQL Server Instance" title="Adding a SQL Server Instance">
+</p>
+
+<p><em>Adding a SQL Server instance to SQL Server Object Explorer</em></p></li>
+<li><p>Set the <strong>server name</strong> to <em>(localdb)\v11.0</em> and leave <strong>Windows Authentication</strong> as your authentication mode. Click <strong>Connect</strong> to continue.</p>
+
+<p><img src="Images/connecting-to-localdb.png?raw=true" alt="Connecting to LocalDB" title="Connecting to LocalDB">
+</p>
+
+<p><em>Connecting to LocalDB</em></p></li>
+<li><p>Now that you are connected to your LocalDB instance, you will need to create a database that will represent the SQL Server backplane for SignalR. To do this, right-click the <strong>Databases</strong> node and select <strong>Add New Database</strong>.</p>
+
+<p><img src="Images/adding-a-new-database.png?raw=true" alt="Adding a new database" title="Adding a new database">
+</p>
+
+<p><em>Adding a new database</em></p></li>
+<li><p>Set the database name to <em>SignalR</em> and click <strong>OK</strong> to create it.</p>
+
+<p><img src="Images/creating-the-signalr-database.png?raw=true" alt="Creating the SignalR database" title="Creating the SignalR database">
+</p>
+
+<p><em>Creating the SignalR database</em></p>
+<blockquote>
+<p><strong>Note:</strong> You can choose any name for the database.</p>
+</blockquote></li>
+<li><p>To receive updates more efficiently from the backplane, it is recommended to enable Service Broker for the database. Service Broker provides native support for messaging and queuing in SQL Server. The backplane also works without Service Broker. Open a new query by right-clicking the database and select <strong>New Query</strong>.</p>
+
+<p><img src="Images/opening-a-new-query.png?raw=true" alt="Opening a New Query" title="Opening a New Query">
+</p>
+
+<p><em>Opening a New Query</em></p></li>
+<li><p>To check whether Service Broker is enabled, query the <strong>is_broker_enabled</strong> column in the <strong>sys.databases</strong> catalog view. Execute the following script in the recently opened query window.</p>
+
+<pre><code class="T-SQL">SELECT [name], [service_broker_guid], [is_broker_enabled] FROM [master].[sys].[databases]
+</code></pre>
+
+<p><img src="Images/querying-the-service-broker-status.png?raw=true" alt="Querying the Service Broker Status" title="Querying the Service Broker Status">
+</p>
+
+<p><em>Querying the Service Broker Status</em></p></li>
+<li><p>If the value of the <strong>is_broker_enabled</strong> column in your database is &quot;0&quot;, use the following command to enable it. Replace <strong>&lt;YOUR-DATABASE&gt;</strong> with the name you set when creating the database (e.g.: SignalR).</p>
+
+<pre><code class="T-SQL">ALTER DATABASE &lt;YOUR-DATABASE&gt; SET ENABLE_BROKER
+</code></pre>
+
+<p><img src="Images/enabling-service-broker.png?raw=true" alt="Enabling Service Broker" title="Enabling Service Broker">
+</p>
+
+<p><em>Enabling Service Broker</em></p>
+<blockquote>
+<p><strong>Note:</strong> If this query appears to deadlock, make sure there are no applications connected to the DB.</p>
+</blockquote></li>
+</ol>
+
+<p><a name="Ex2Task3" /></p>
+
+<h4>Task 3 – Configuring the SignalR Application</h4>
+
+<p>In this task, you will configure <strong>Geek Quiz</strong> to connect to the SQL Server backplane. You will first add the <strong>SignalR.SqlServer</strong> NuGet package and set the connection string to your backplane database.</p>
+
+<ol>
+<li><p>Open the <strong>Package Manager Console</strong> from <strong>Tools</strong> | <strong>Library Package Manager</strong>. Make sure that <strong>GeekQuiz</strong> project is selected in the <strong>Default project</strong> drop-down list. Type the following command to install the <strong>Microsoft.AspNet.SignalR.SqlServer</strong> NuGet package. </p>
+
+<!--mark:1-->
+
+<pre><code class="PowerShell">Install-Package Microsoft.AspNet.SignalR.SqlServer 
+</code></pre></li>
+<li><p>Repeat the previous step but this time for project <strong>GeekQuiz2</strong>.</p></li>
+<li><p>To configure the SQL Server backplane, open the <strong>Startup.cs</strong> file of the <strong>GeekQuiz</strong> project and add the following code to the <strong>Configure</strong> method. Replace <strong>&lt;YOUR-DATABASE&gt;</strong> with your database name you used when creating the SQL Server backplane. Repeat this step for the <strong>GeekQuiz2</strong> project.</p>
+
+<p>(Code Snippet - <em>RealTimeSignalR - Ex2 - StartupConfiguration</em>)</p>
+
+<!-- mark:5-6 -->
+
+<pre><code class="C#">public class Startup 
+{   
+    public void Configuration(IAppBuilder app) 
+    {           
+        var sqlConnectionString = @&quot;Server=(localdb)\v11.0;Database=&lt;YOUR-DATABASE&gt;;Integrated Security=True;&quot;;
+        GlobalHost.DependencyResolver.UseSqlServer(sqlConnectionString); 
+        this.ConfigureAuth(app);
+        app.MapSignalR();
+    }
+}
+</code></pre></li>
+<li><p>Now that both projects are configured to use the SQL Server backplane, press <strong>F5</strong> to run them simultaneously.</p></li>
+<li><p>Again, <strong>Visual Studio</strong> will launch two instances of <strong>Geek Quiz</strong> in different ports. Pin one of the browsers on the left and the other on the right of your screen and log in with your credentials. Keep the Trivia page on the left and go to <strong>Statistics</strong> pagein the right browser.</p></li>
+<li><p>Start answering questions in the left browser. This time, the <strong>Statistics</strong> page is updated thanks to the backplane. Switch between applications (<strong>Statistics</strong> is now on the left, and <strong>Trivia</strong> is on the right) and repeat the test to validate that it is working for both instances. The backplane serves as a <em>shared cache</em> of messages for each connected server, and each server will store the messages in their own local cache to distribute to connected clients.</p></li>
+<li><p>Go back to Visual Studio and stop debugging.</p></li>
+<li><p>The SQL Server backplane component automatically generates the necessary tables on the specified database. In the <strong>SQL Server Object Explorer</strong> panel, open the database you created for the backplane (e.g.: SignalR) and expand its tables. You should see the following tables:</p>
+
+<p><img src="Images/backplane-generated-tables.png?raw=true" alt="Backplane Generated Tables">
+</p>
+
+<p><em>Backplane Generated Tables</em></p></li>
+<li><p>Right-click the <strong>SignalR.Messages_0</strong> table and select <strong>View Data</strong>.</p>
+
+<p><img src="Images/view-signalr-backplane-messages-table.png?raw=true" alt="View SignalR Backplane Messages Table">
+</p>
+
+<p><em>View SignalR Backplane Messages Table</em></p></li>
+<li><p>You can see the different messages sent to the <strong>Hub</strong> when answering the trivia questions. The backplane distributes these messages to any connected instance.</p>
+
+<p><img src="Images/backplane-messages-table.png?raw=true" alt="Backplane Messages Table">
+</p>
+
+<p><em>Backplane Messages Table</em></p></li>
+</ol>
+
+<hr>
+
+<p><a name="Summary" /></p>
+
+<h2>Summary</h2>
+
+<p>In this hands-on lab, you have learned how to add <strong>SignalR</strong> to your application and send notifications from the server to your connected clients using <strong>Hubs</strong>. Additionally, you learned how to scale out your application by using a <em>backplane</em> component when your application is deployed in multiple IIS instances.</p>

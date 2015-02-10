@@ -1,0 +1,850 @@
+<p><a name="HOLTop" /></p>
+
+<h1>ASP.NET Web API and Single-Page Applications (SPAs)</h1>
+
+<hr>
+
+<p><a name="Overview" /></p>
+
+<h2>Overview</h2>
+
+<p>In traditional web applications, the client (browser) initiates the communication with the server by requesting a page. The server then processes the request and sends the HTML of the page to the client. In subsequent interactions with the page –e.g. the user navigates to a link or submits a form with data– a new request is sent to the server, and the flow starts again: the server processes the request and sends a new page to the browser in response to the new action requested by the client.</p>
+
+<p>In Single-Page Applications (SPAs) the entire page is loaded in the browser after the initial request, but subsequent interactions take place through Ajax requests. This means that the browser has to update only the portion of the page that has changed; there is no need to reload the entire page. The SPA approach reduces the time taken by the application to respond to user actions, resulting in a more fluid experience.</p>
+
+<p>The architecture of a SPA involves certain challenges that are not present in traditional web applications. However, emerging technologies like ASP.NET Web API, JavaScript frameworks like AngularJS and new styling features provided by CSS3 make it really easy to design and build SPAs.</p>
+
+<p>In this hand-on lab, you will take advantage of those technologies to implement Geek Quiz, a trivia website based on the SPA concept. You will first implement the service layer with ASP.NET Web API to expose the required endpoints to retrieve the quiz questions and store the answers. Then, you will build a rich and responsive UI using AngularJS and CSS3 transformation effects.</p>
+
+<p><a name="Objectives" /></p>
+
+<h3>Objectives</h3>
+
+<p>In this hands-on lab, you will learn how to:</p>
+
+<ul>
+<li>Create an ASP.NET Web API service to send and receive JSON data</li>
+<li>Create a responsive UI using AngularJS</li>
+<li>Enhance the UI experience with CSS3 transformations</li>
+</ul>
+
+<p><a name="Prerequisites"></a></p>
+
+<h3>Prerequisites</h3>
+
+<p>The following is required to complete this hands-on lab:</p>
+
+<ul>
+<li><a href="http://www.microsoft.com/visualstudio/">Visual Studio Express 2013 for Web</a> or greater</li>
+</ul>
+
+<p><a name="Setup" /></p>
+
+<h3>Setup</h3>
+
+<p>In order to run the exercises in this hands-on lab, you will need to set up your environment first.</p>
+
+<ol>
+<li>Open Windows Explorer and browse to the lab's <strong>Source</strong> folder.</li>
+<li>Right-click on <strong>Setup.cmd</strong> and select <strong>Run as administrator</strong> to launch the setup process that will configure your environment and install the Visual Studio code snippets for this lab.</li>
+<li>If the User Account Control dialog box is shown, confirm the action to proceed.</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Make sure you have checked all the dependencies for this lab before running the setup.</p>
+</blockquote>
+<p><a name="CodeSnippets" /></p>
+
+<h3>Using the Code Snippets</h3>
+
+<p>Throughout the lab document, you will be instructed to insert code blocks. For your convenience, most of this code is provided as Visual Studio Code Snippets, which you can access from within Visual Studio 2013 to avoid having to add it manually. </p>
+<blockquote>
+<p><strong>Note</strong>: Each exercise is accompanied by a starting solution located in the <strong>Begin</strong> folder of the exercise that allows you to follow each exercise independently of the others. Please be aware that the code snippets that are added during an exercise are missing from these starting solutions and may not work until you have completed the exercise. Inside the source code for an exercise, you will also find an <strong>End</strong> folder containing a Visual Studio solution with the code that results from completing the steps in the corresponding exercise. You can use these solutions as guidance if you need additional help as you work through this hands-on lab.</p>
+</blockquote>
+<hr>
+
+<p><a name="Exercises" /></p>
+
+<h2>Exercises</h2>
+
+<p>This hands-on lab includes the following exercises:</p>
+
+<ol>
+<li><a href="#Exercise1">Creating a Web API</a></li>
+<li><a href="#Exercise2">Creating a SPA Interface</a></li>
+</ol>
+
+<p>Estimated time to complete this lab: <strong>60 minutes</strong></p>
+<blockquote>
+<p><strong>Note:</strong> When you first start Visual Studio, you must select one of the predefined settings collections. Each predefined collection is designed to match a particular development style and determines window layouts, editor behavior, IntelliSense code snippets, and dialog box options. The procedures in this lab describe the actions necessary to accomplish a given task in Visual Studio when using the <strong>General Development Settings</strong> collection. If you choose a different settings collection for your development environment, there may be differences in the steps that you should take into account.</p>
+</blockquote>
+<p><a name="Exercise1" /></p>
+
+<h3>Exercise 1: Creating a Web API</h3>
+
+<p>One of the key parts of a SPA is the service layer. It is responsible for processing the Ajax calls sent by the UI and returning data in response to that call. The data retrieved should be presented in a machine-readable format in order to be parsed and consumed by the client.</p>
+
+<p>The Web API framework is part of the ASP.NET Stack and is designed to make it easy to implement HTTP services, generally sending and receiving JSON- or XML-formatted data through a RESTful API. In this exercise you will create the Web site to host the Geek Quiz application and then implement the back-end service to expose and persist the quiz data using ASP.NET Web API.</p>
+
+<p><a name="Ex1Task1" /></p>
+
+<h4>Task 1 – Creating the Initial Project for Geek Quiz</h4>
+
+<p>In this task you will start creating a new ASP.NET MVC project with support for ASP.NET Web API based on the <strong>One ASP.NET</strong> project type that comes with Visual Studio. <strong>One ASP.NET</strong> unifies all ASP.NET technologies and gives you the option to mix and match them as desired. You will then add the Entity Framework's model classes and the database initializator to insert the quiz questions.</p>
+
+<ol>
+<li><p>Open <strong>Visual Studio Express 2013 for Web</strong> and select <strong>File | New Project...</strong> to start a new solution.</p>
+
+<p><img src="Images/creating-a-new-project.png?raw=true" alt="Creating a New Project" title="Creating a New Project">
+</p>
+
+<p><em>Creating a New Project</em></p></li>
+<li><p>In the <strong>New Project</strong> dialog box, select <strong>ASP.NET Web Application</strong> under the <strong>Visual C# | Web</strong> tab. Make sure <strong>.NET Framework 4.5</strong> is selected, name it <em>GeekQuiz</em>, choose a <strong>Location</strong> and click <strong>OK</strong>.</p>
+
+<p><img src="Images/creating-new-aspnet-web-application-project.png?raw=true" alt="Creating a new ASP.NET Web Application project" title="Creating a new ASP.NET Web Application project">
+</p>
+
+<p><em>Creating a new ASP.NET Web Application project</em></p></li>
+<li><p>In the <strong>New ASP.NET Project</strong> dialog box, select the <strong>MVC</strong> template and select the <strong>Web API</strong> option. Also, make sure that the <strong>Authentication</strong> option is set to <strong>Individual User Accounts</strong>. Click <strong>OK</strong> to continue.</p>
+
+<p><img src="Images/creating-a-new-project-with-mvc.png?raw=true" alt="Creating a new project with the MVC template, including Web API components">
+</p>
+
+<p><em>Creating a new project with the MVC template, including Web API components</em></p></li>
+<li><p>In <strong>Solution Explorer</strong>, right-click the <strong>Models</strong> folder of the <strong>GeekQuiz</strong> project and select <strong>Add | Existing Item...</strong>.</p>
+
+<p><img src="Images/adding-an-existing-item.png?raw=true" alt="Adding an existing item" title="Adding an existing item">
+</p>
+
+<p><em>Adding an existing item</em></p></li>
+<li><p>In the <strong>Add Existing Item</strong> dialog box, navigate to the <strong>Source/Assets/Models</strong> folder and select all the files. Click <strong>Add</strong>.</p>
+
+<p><img src="Images/adding-the-model-assets.png?raw=true" alt="Adding the model assets" title="Adding the model assets">
+</p>
+
+<p><em>Adding the model assets</em></p>
+<blockquote>
+<p><strong>Note:</strong> By adding these files, you are adding the data model, the Entity Framework's database context and the database initializer for the Geek Quiz application.</p>
+
+<p><strong>Entity Framework (EF)</strong> is an object-relational mapper (ORM) that enables you to create data access applications by programming with a conceptual application model instead of programming directly using a relational storage schema. You can learn more about Entity Framework <a href="http://www.asp.net/entity-framework">here</a>.</p>
+
+<p>The following is a description of the classes you just added:</p>
+
+<ul>
+<li><strong>TriviaOption:</strong> represents a single option associated with a quiz question</li>
+<li><strong>TriviaQuestion:</strong> represents a quiz question and exposes the  associated options through the <strong>Options</strong> property</li>
+<li><strong>TriviaAnswer:</strong> represents the option selected by the user in response to a quiz question </li>
+<li><strong>TriviaContext:</strong> represents the Entity Framework's database context of the Geek Quiz application. This class derives from <strong>DContext</strong> and exposes <strong>DbSet</strong> properties that represent collections of the entities described above.</li>
+<li><strong>TriviaDatabaseInitializer:</strong> the implementation of the Entity Framework initializer for the <strong>TriviaContext</strong> class which inherits from <strong>CreateDatabaseIfNotExists</strong>. The default behavior of this class is to create the database only if it does not exist, inserting the entities specified in the <strong>Seed</strong> method.</li>
+</ul>
+</blockquote></li>
+<li><p>Open the <strong>Global.asax.cs</strong> file and add the following using statement.</p>
+
+<!-- mark:1 -->
+
+<pre><code class="C#">using GeekQuiz.Models;
+</code></pre></li>
+<li><p>Add the following code at the beginning of the <strong>Application_Start</strong> method to set the <strong>TriviaDatabaseInitializer</strong> as the database initializer.</p>
+
+<!-- mark:5 -->
+
+<pre><code class="C#">public class MvcApplication : System.Web.HttpApplication
+{
+    protected void Application_Start()
+    {
+        System.Data.Entity.Database.SetInitializer(new TriviaDatabaseInitializer()); 
+
+        AreaRegistration.RegisterAllAreas();
+        GlobalConfiguration.Configure(WebApiConfig.Register);
+        FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+        RouteConfig.RegisterRoutes(RouteTable.Routes);
+        BundleConfig.RegisterBundles(BundleTable.Bundles);
+    }
+}
+</code></pre></li>
+<li><p>Modify the <strong>Home</strong> controller to restrict access to authenticated users. To do this, open the <strong>HomeController.cs</strong> file inside the <strong>Controllers</strong> folder and add the <strong>Authorize</strong> attribute to the <strong>HomeController</strong> class definition.</p>
+
+<!-- mark:3 -->
+
+<pre><code class="C#">namespace GeekQuiz.Controllers
+{
+    [Authorize]
+    public class HomeController : Controller
+    {
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        ...
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The <strong>Authorize</strong> filter checks to see if the user is authenticated. If the user is not authenticated, it returns HTTP status code 401 (Unauthorized) without invoking the action. You can apply the filter globally, at the controller level, or at the level of individual actions.</p>
+</blockquote></li>
+<li><p>You will now customize the layout of the web pages and the branding. To do this, open the <strong>_Layout.cshtml</strong> file inside the <strong>Views | Shared</strong> folder and update the content of the <strong>&lt;title&gt;</strong> element by replacing <em>My ASP.NET Application</em> with <em>Geek Quiz</em>.</p>
+
+<!--mark:4-->
+
+<pre><code class="HTML">&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;@ViewBag.Title - Geek Quiz&lt;/title&gt;
+    @Styles.Render(&quot;~/Content/css&quot;)
+    @Scripts.Render(&quot;~/bundles/modernizr&quot;)
+
+&lt;/head&gt;
+</code></pre></li>
+<li><p>In the same file, update the navigation bar by removing the <em>About</em> and <em>Contact</em> links and renaming the <em>Home</em> link to <em>Play</em>. Additionally, rename the <em>Application name</em> link to <em>Geek Quiz</em>. The HTML for the navigation bar should look like the following code.</p>
+
+<!--mark:9,12-14-->
+
+<pre><code class="HTML">&lt;div class=&quot;navbar navbar-inverse navbar-fixed-top&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;navbar-header&quot;&gt;
+            &lt;button type=&quot;button&quot; class=&quot;navbar-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;.navbar-collapse&quot;&gt;
+                &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+                &lt;span class=&quot;icon-bar&quot;&gt;&lt;/span&gt;
+            &lt;/button&gt;
+            @Html.ActionLink(&quot;Geek Quiz&quot;, &quot;Index&quot;, &quot;Home&quot;, null, new { @class = &quot;navbar-brand&quot; })
+        &lt;/div&gt;
+        &lt;div class=&quot;navbar-collapse collapse&quot;&gt;
+            &lt;ul class=&quot;nav navbar-nav&quot;&gt;
+                &lt;li&gt;@Html.ActionLink(&quot;Play&quot;, &quot;Index&quot;, &quot;Home&quot;)&lt;/li&gt;
+            &lt;/ul&gt;
+            @Html.Partial(&quot;_LoginPartial&quot;)
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre></li>
+<li><p>Update the footer of the layout page by replacing <em>My ASP.NET Application</em> with <em>Geek Quiz</em>. To do this, replace the content of the <strong>&lt;footer&gt;</strong> element with the following highlighted code.</p>
+
+<!--mark:5-->
+
+<pre><code class="HTML">&lt;div class=&quot;container body-content&quot;&gt;
+    @RenderBody()
+    &lt;hr /&gt;
+    &lt;footer&gt;
+        &lt;p&gt;&amp;copy; @DateTime.Now.Year - Geek Quiz&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/div&gt;
+</code></pre></li>
+</ol>
+
+<p><a name="Ex1Task2" /></p>
+
+<h4>Task 2 – Creating the TriviaController Web API</h4>
+
+<p>In the previous task, you created the initial structure of the Geek Quiz web application. You will now build a simple Web API service that interacts with the quiz data model and exposes the following actions:</p>
+
+<ul>
+<li><strong>GET /api/trivia</strong>: Retrieves the next question from the quiz list to be answered by the authenticated user.</li>
+<li><strong>POST /api/trivia</strong>: Stores the quiz answer specified by the authenticated user.</li>
+</ul>
+
+<p>You will use the ASP.NET Scaffolding tools provided by Visual Studio to create the baseline for the Web API controller class.</p>
+
+<ol>
+<li><p>Open the <strong>WebApiConfig.cs</strong> file inside the <strong>App_Start</strong> folder. This file defines the configuration of the Web API service, like how routes are mapped to Web API controller actions.</p></li>
+<li><p>Add the following using statement at the beginning of the file.</p>
+
+<!-- mark:1 -->
+
+<pre><code class="C#">using Newtonsoft.Json.Serialization;
+</code></pre></li>
+<li><p>Add the following highlighted code to the <strong>Register</strong> method to globally configure the formatter for the JSON data retrieved by the Web API action methods.</p>
+
+<!-- mark:7-8 -->
+
+<pre><code class="C#">public static class WebApiConfig
+{
+    public static void Register(HttpConfiguration config)
+    {
+        // Web API configuration and services
+
+        // Use camel case for JSON data.
+        config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+        // Web API routes
+        config.MapHttpAttributeRoutes();
+
+        config.Routes.MapHttpRoute(
+            name: &quot;DefaultApi&quot;,
+            routeTemplate: &quot;api/{controller}/{id}&quot;,
+            defaults: new { id = RouteParameter.Optional }
+        );
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The <strong>CamelCasePropertyNamesContractResolver</strong> automatically converts property names to <em>camel</em> case, which is the general convention for property names in JavaScript.</p>
+</blockquote></li>
+<li><p>In <strong>Solution Explorer</strong>, right-click the <strong>Controllers</strong> folder of the <strong>GeekQuiz</strong> project and select <strong>Add | New Scaffolded Item...</strong>.</p>
+
+<p><img src="Images/creating-a-new-scaffolded-item.png?raw=true" alt="Creating a new scaffolded item" title="Creating a new scaffolded item">
+</p>
+
+<p><em>Creating a new scaffolded item</em></p></li>
+<li><p>In the <strong>Add Scaffold</strong> dialog box, make sure that the <strong>Common</strong> node is selected in the left pane. Then, select the <strong>Web API 2 Controller - Empty</strong> template in the center pane and click <strong>Add</strong>.</p>
+
+<p><img src="Images/selecting-the-web-api-2-controller-empty.png?raw=true" alt="Selecting the Web API 2 Controller Empty template" title="Selecting the Web API 2 Controller Empty template">
+</p>
+
+<p><em>Selecting the Web API 2 Controller Empty template</em></p>
+<blockquote>
+<p><strong>Note:</strong> <strong>ASP.NET Scaffolding</strong> is a code generation framework for ASP.NET Web applications. Visual Studio 2013 includes pre-installed code generators for MVC and Web API projects. You should use scaffolding in your project when you want to quickly add code that interacts with data models in order to reduce the amount of time required to develop standard data operations.</p>
+
+<p>The scaffolding process also ensures that all the required dependencies are installed in the project. For example, if you start with an empty ASP.NET project and then use scaffolding to add a Web API controller, the required Web API NuGet packages and references are added to your project automatically.</p>
+</blockquote></li>
+<li><p>In the <strong>Add Controller</strong> dialog box, type <em>TriviaController</em> in the <strong>Controller name</strong> text box and click <strong>Add</strong>.</p>
+
+<p><img src="Images/adding-the-trivia-controller.png?raw=true" alt="Adding the Trivia Controller" title="Adding the Trivia Controller">
+</p>
+
+<p><em>Adding the Trivia Controller</em></p></li>
+<li><p>The <strong>TriviaController.cs</strong> file is then added to the <strong>Controllers</strong> folder of the <strong>GeekQuiz</strong> project, containing an empty <strong>TriviaController</strong> class. Add the following using statements at the beginning of the file.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex1 - TriviaControllerUsings</em>)</p>
+
+<!--mark: 1-5-->
+
+<pre><code class="C#">using System.Data.Entity;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web.Http.Description;
+using GeekQuiz.Models;
+</code></pre></li>
+<li><p>Add the following code at the beginning of the <strong>TriviaController</strong> class to define, initialize and dispose the <strong>TriviaContext</strong> instance in the controller.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex1 - TriviaControllerContext</em>)</p>
+
+<!-- mark:3-13 -->
+
+<pre><code class="C#">public class TriviaController : ApiController
+{
+    private TriviaContext db = new TriviaContext();
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            this.db.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The <strong>Dispose</strong> method of <strong>TriviaController</strong> invokes the <strong>Dispose</strong> method of the <strong>TriviaContext</strong> instance, which ensures that all the resources used by the context object are released when the <strong>TriviaContext</strong> instance is disposed or garbage-collected. This includes closing all database connections opened by Entity Framework.</p>
+</blockquote></li>
+<li><p>Add the following helper method at the end of the <strong>TriviaController</strong> class. This method retrieves the following quiz question from the database to be answered by the specified user.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex1 - TriviaControllerNextQuestion</em>)</p>
+
+<!-- mark:1-15 -->
+
+<pre><code class="C#">private async Task&lt;TriviaQuestion&gt; NextQuestionAsync(string userId)
+{
+    var lastQuestionId = await this.db.TriviaAnswers
+        .Where(a =&gt; a.UserId == userId)
+        .GroupBy(a =&gt; a.QuestionId)
+        .Select(g =&gt; new { QuestionId = g.Key, Count = g.Count() })
+        .OrderByDescending(q =&gt; new { q.Count, QuestionId = q.QuestionId })
+        .Select(q =&gt; q.QuestionId)
+        .FirstOrDefaultAsync();
+
+    var questionsCount = await this.db.TriviaQuestions.CountAsync();
+
+    var nextQuestionId = (lastQuestionId % questionsCount) + 1;
+    return await this.db.TriviaQuestions.FindAsync(CancellationToken.None, nextQuestionId);
+}
+</code></pre></li>
+<li><p>Add the following <strong>Get</strong> action method to the <strong>TriviaController</strong> class. This action method calls the <strong>NextQuestionAsync</strong> helper method defined in the previous step to retrieve the next question for the authenticated user.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex1 - TriviaControllerGetAction</em>)</p>
+
+<!-- mark:1-15 -->
+
+<pre><code class="C#">// GET api/Trivia
+[ResponseType(typeof(TriviaQuestion))]
+public async Task&lt;IHttpActionResult&gt; Get()
+{
+    var userId = User.Identity.Name;
+
+    TriviaQuestion nextQuestion = await this.NextQuestionAsync(userId);
+
+    if (nextQuestion == null)
+    {
+        return this.NotFound();
+    }
+
+    return this.Ok(nextQuestion);
+}
+</code></pre></li>
+<li><p>Add the following helper method at the end of the <strong>TriviaController</strong> class. This method stores the specified answer in the database and returns a Boolean  value indicating whether or not the answer is correct.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex1 - TriviaControllerStoreAsync</em>)</p>
+
+<!-- mark:1-10 -->
+
+<pre><code class="C#">private async Task&lt;bool&gt; StoreAsync(TriviaAnswer answer)
+{
+    this.db.TriviaAnswers.Add(answer);
+
+    await this.db.SaveChangesAsync();
+    var selectedOption = await this.db.TriviaOptions.FirstOrDefaultAsync(o =&gt; o.Id == answer.OptionId
+        &amp;&amp; o.QuestionId == answer.QuestionId);
+
+    return selectedOption.IsCorrect;
+}
+</code></pre></li>
+<li><p>Add the following <strong>Post</strong> action method to the <strong>TriviaController</strong> class. This action method associates the answer to the authenticated user and calls the <strong>StoreAsync</strong> helper method. Then, it sends a response  with the Boolean value returned by the helper method.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex1 - TriviaControllerPostAction</em>)</p>
+
+<!-- mark:1-14 -->
+
+<pre><code class="C#">// POST api/Trivia
+[ResponseType(typeof(TriviaAnswer))]
+public async Task&lt;IHttpActionResult&gt; Post(TriviaAnswer answer)
+{
+    if (!ModelState.IsValid)
+    {
+        return this.BadRequest(this.ModelState);
+    }
+
+    answer.UserId = User.Identity.Name;
+
+    var isCorrect = await this.StoreAsync(answer);
+    return this.Ok&lt;bool&gt;(isCorrect);
+}
+</code></pre></li>
+<li><p>Modify the Web API controller to restrict access to authenticated users by adding the <strong>Authorize</strong> attribute to the <strong>TriviaController</strong> class definition.</p>
+
+<!-- mark:1 -->
+
+<pre><code class="C#">[Authorize]
+public class TriviaController : ApiController
+{
+    ...
+}
+</code></pre></li>
+</ol>
+
+<p><a name="Ex1Task3" /></p>
+
+<h4>Task 3 – Running the Solution</h4>
+
+<p>In this task you will verify that the Web API service you built in the previous task is working as expected. You will use the Internet Explorer <strong>F12 Developer Tools</strong> to capture the network traffic and inspect the full response from the Web API service.</p>
+<blockquote>
+<p><strong>Note:</strong> Make sure that <strong>Internet Explorer</strong> is selected in the <strong>Start</strong> button located on the Visual Studio toolbar.</p>
+
+<p><img src="Images/internet-explorer-option.png?raw=true" alt="Internet Explorer option">
+</p>
+</blockquote>
+<ol>
+<li><p>Press <strong>F5</strong> to run the solution. The <strong>Log in</strong> page should appear in the browser.</p>
+<blockquote>
+<p><strong>Note:</strong> When the application starts, the default MVC route is triggered, which by default is mapped to the <strong>Index</strong> action of the <strong>HomeController</strong> class. Since <strong>HomeController</strong> is restricted to authenticated users (remember that you decorated that class with the <strong>Authorize</strong> attribute in Exercise 1) and there is no user authenticated yet, the application redirects the original request to the log in page.</p>
+</blockquote>
+<p><img src="Images/running-the-solution.png?raw=true" alt="Running the solution" title="Running the solution">
+</p>
+
+<p><em>Running the solution</em></p></li>
+<li><p>Click <strong>Register</strong> to create a new user.</p>
+
+<p><img src="Images/registering-a-new-account.png?raw=true" alt="Registering a new user" title="Registering a new user">
+</p>
+
+<p><em>Registering a new user</em></p></li>
+<li><p>In the <strong>Register</strong> page, enter a <strong>User name</strong> and <strong>Password</strong>, and then click <strong>Register</strong>.</p>
+
+<p><img src="Images/register-page.png?raw=true" alt="Register page" title="Register page">
+</p>
+
+<p><em>Register page</em></p></li>
+<li><p>The application registers the new account and the user is authenticated and redirected back to the home page.</p>
+
+<p><img src="Images/user-authenticated.png?raw=true" alt="User is authenticated" title="User authenticated">
+</p>
+
+<p><em>User is authenticated</em></p></li>
+<li><p>In the browser, press <strong>F12</strong> to open the <strong>Developer Tools</strong> panel. Press <strong>CTRL + 4</strong> or click the <strong>Network</strong> icon, and then click the green arrow button to begin capturing network traffic.</p>
+
+<p><img src="Images/initiating-web-api-network-capture.png?raw=true" alt="Initiating Web API network capture" title="Initiating Web API network capture">
+</p>
+
+<p><em>Initiating Web API network capture</em></p></li>
+<li><p>Append <strong>api/trivia</strong> to the URL in the browser's address bar. You will now inspect the details of the response from the <strong>Get</strong> action method in <strong>TriviaController</strong>.</p>
+
+<p><img src="Images/retrieving-the-next-question-data-through-web.png?raw=true" alt="Retrieving the next question data through Web API" title="Retrieving the next question data through Web API">
+</p>
+
+<p><em>Retrieving the next question data through Web API</em></p>
+<blockquote>
+<p><strong>Note:</strong> Once the download finishes, you will be prompted to make an action with the downloaded file. Leave the dialog box open in order to be able to watch the response content through the Developers Tool window.</p>
+</blockquote></li>
+<li><p>Now you will inspect the body of the response. To do this, click the  <strong>Details</strong> tab and then click <strong>Response body</strong>. You can check that the downloaded data is an object with the properties <strong>options</strong> (which is a list of <strong>TriviaOption</strong> objects), <strong>id</strong> and <strong>title</strong> that correspond to the <strong>TriviaQuestion</strong> class.</p>
+
+<p><img src="Images/viewing-the-web-api-response-body.png?raw=true" alt="Viewing the Web API Response Body" title="Viewing the Web API Response Body">
+</p>
+
+<p><em>Viewing Web API Response Body</em></p></li>
+<li><p>Go back to Visual Studio and press <strong>SHIFT + F5</strong> to stop debugging.</p></li>
+</ol>
+
+<p><a name="Exercise2" /></p>
+
+<h3>Exercise 2: Creating the SPA Interface</h3>
+
+<p>In this exercise you will first build the web front-end portion of Geek Quiz, focusing on the Single-Page Application interaction using <strong>AngularJS</strong>. You will then enhance the user experience with CSS3 to perform rich animations and provide a visual effect of context switching when transitioning from one question to the next.</p>
+
+<p><a name="Ex2Task1" /></p>
+
+<h4>Task 1 – Creating the SPA Interface Using AngularJS</h4>
+
+<p>In this task you will use <strong>AngularJS</strong> to implement the client side of the Geek Quiz application. <strong>AngularJS</strong> is an open-source JavaScript framework that augments browser-based applications with <em>Model-View-Controller</em> (MVC) capability, facilitating both development and testing.</p>
+
+<p>You will start by installing AngularJS from Visual Studio's Package Manager Console. Then, you will create the controller to provide the behavior of the Geek Quiz app and the view to render the quiz questions and answers using the AngularJS template engine.</p>
+<blockquote>
+<p><strong>Note:</strong> For more information about AngularJS, refer to <a href="http://angularjs.org/"><a href="http://angularjs.org/">http://angularjs.org/</a></a>.</p>
+</blockquote>
+<ol>
+<li><p>Open <strong>Visual Studio Express 2013 for Web</strong> and open the <strong>GeekQuiz.sln</strong> solution located in the <strong>Source/Ex2-CreatingASPAInterface/Begin</strong> folder. Alternatively, you can continue with the solution that you obtained in the previous exercise.</p></li>
+<li><p>Open the <strong>Package Manager Console</strong> from <strong>Tools</strong> | <strong>Library Package Manager</strong>. Type the following command to install the <strong>AngularJS.Core</strong> NuGet package.</p>
+
+<!--mark:1-->
+
+<pre><code class="PowerShell">Install-Package AngularJS.Core
+</code></pre></li>
+<li><p>In <strong>Solution Explorer</strong>, right-click the <strong>Scripts</strong> folder of the <strong>GeekQuiz</strong> project and select <strong>Add | New Folder</strong>. Name the folder <strong>app</strong> and press <strong>Enter</strong>.</p></li>
+<li><p>Right-click the <strong>app</strong> folder you just created and select <strong>Add | JavaScript File</strong>.</p>
+
+<p><img src="Images/creating-a-new-javascript-file.png?raw=true" alt="Creating a new JavaScript file">
+</p>
+
+<p><em>Creating a new JavaScript file</em></p></li>
+<li><p>In the <strong>Specify Name for Item</strong> dialog box, type <em>quiz-controller</em> in the <strong>Item name</strong> text box and click <strong>OK</strong>.</p>
+
+<p><img src="Images/naming-the-javascript-file.png?raw=true" alt="Naming the new JavaScript file">
+</p>
+
+<p><em>Naming the new JavaScript file</em></p></li>
+<li><p>In the <strong>quiz-controller.js</strong> file, add the following code to declare and initialize the AngularJS <strong>QuizCtrl</strong> controller.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex2 - AngularQuizController</em>)</p>
+
+<!--mark:1-12-->
+
+<pre><code class="JavaScript">angular.module('QuizApp', [])
+    .controller('QuizCtrl', function ($scope, $http) {
+        $scope.answered = false;
+        $scope.title = &quot;loading question...&quot;;
+        $scope.options = [];
+        $scope.correctAnswer = false;
+        $scope.working = false;
+
+        $scope.answer = function () {
+            return $scope.correctAnswer ? 'correct' : 'incorrect';
+        };
+    });
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The constructor function of the <strong>QuizCtrl</strong> controller expects an injectable parameter named <strong>$scope</strong>. The initial state of the scope  should be set up in the constructor function by attaching properties to the <strong>$scope</strong> object. The properties contain the <strong>view model</strong>, and will be accessible to the template when the controller is registered.</p>
+
+<p>The <strong>QuizCtrl</strong> controller is defined inside a module named <strong>QuizApp</strong>. Modules are units of work that let you break your application into separate components. The main advantages of using modules is that the code is easier to understand and facilitates unit testing, reusability and maintainability.</p>
+</blockquote></li>
+<li><p>You will now add behavior to the scope in order to react to events triggered from the view. Add the following code at the end of the <strong>QuizCtrl</strong> controller to define the <strong>nextQuestion</strong> function in the <strong>$scope</strong> object.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex2 - AngularQuizControllerNextQuestion</em>)</p>
+
+<!--mark:4-19-->
+
+<pre><code class="JavaScript">.controller('QuizCtrl', function ($scope, $http) { 
+    ...
+
+    $scope.nextQuestion = function () {
+        $scope.working = true;
+        $scope.answered = false;
+        $scope.title = &quot;loading question...&quot;;
+        $scope.options = [];
+
+        $http.get(&quot;/api/trivia&quot;).success(function (data, status, headers, config) {
+            $scope.options = data.options;
+            $scope.title = data.title;
+            $scope.answered = false;
+            $scope.working = false;
+        }).error(function (data, status, headers, config) {
+            $scope.title = &quot;Oops... something went wrong&quot;;
+            $scope.working = false;
+        });
+    };
+};
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> This function retrieves the next question from the <strong>Trivia</strong> Web API created in the previous exercise and attaches the question data to the <strong>$scope</strong> object.</p>
+</blockquote></li>
+<li><p>Insert the following code at the end of the <strong>QuizCtrl</strong> controller to define the <strong>sendAnswer</strong> function in the <strong>$scope</strong> object.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex2 - AngularQuizControllerSendAnswer</em>)</p>
+
+<!--mark:4-15-->
+
+<pre><code class="JavaScript">.controller('QuizCtrl', function ($scope, $http) { 
+    ...
+
+    $scope.sendAnswer = function (option) {
+        $scope.working = true;
+        $scope.answered = true;
+
+        $http.post('/api/trivia', { 'questionId': option.questionId, 'optionId': option.id }).success(function (data, status, headers, config) {
+            $scope.correctAnswer = (data === &quot;true&quot;);
+            $scope.working = false;
+        }).error(function (data, status, headers, config) {
+            $scope.title = &quot;Oops... something went wrong&quot;;
+            $scope.working = false;
+        });
+    };
+};
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> This function sends the  answer selected by the user to the <strong>Trivia</strong> Web API and stores the result –i.e. if the answer is correct or not– in the <strong>$scope</strong> object.</p>
+
+<p>The <strong>nextQuestion</strong> and <strong>sendAnswer</strong> functions from above use the AngularJS <strong>$http</strong> object to abstract the communication with the Web API via the XMLHttpRequest JavaScript object from the browser. AngularJS supports another service that brings a higher level of abstraction to perform CRUD operations against a resource through RESTful APIs. The AngularJS <strong>$resource</strong> object has action methods which provide high-level behaviors without the need to interact with the <strong>$http</strong> object. Consider using the <strong>$resource</strong> object in scenarios that requires the CRUD model (fore information, see the <a href="http://docs.angularjs.org/api/ngResource/service/$resource">$resource documentation</a>).</p>
+</blockquote></li>
+<li><p>The next step is to create the AngularJS template that defines the view for the quiz. To do this, open the <strong>Index.cshtml</strong> file inside the <strong>Views | Home</strong> folder and replace the content with the following code.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex2 - GeekQuizView</em>)</p>
+
+<!--mark:1-31-->
+
+<pre><code class="HTML">@{
+    ViewBag.Title = &quot;Play&quot;;
+}
+
+&lt;div id=&quot;bodyContainer&quot; ng-app=&quot;QuizApp&quot;&gt;
+    &lt;section id=&quot;content&quot;&gt;
+        &lt;div class=&quot;container&quot; &gt;
+            &lt;div class=&quot;row&quot;&gt;
+                &lt;div class=&quot;flip-container text-center col-md-12&quot; ng-controller=&quot;QuizCtrl&quot; ng-init=&quot;nextQuestion()&quot;&gt;
+                    &lt;div class=&quot;back&quot; ng-class=&quot;{flip: answered, correct: correctAnswer, incorrect:!correctAnswer}&quot;&gt;
+                        &lt;p class=&quot;lead&quot;&gt;{{answer()}}&lt;/p&gt;
+                        &lt;p&gt;
+                            &lt;button class=&quot;btn btn-info btn-lg next option&quot; ng-click=&quot;nextQuestion()&quot; ng-disabled=&quot;working&quot;&gt;Next Question&lt;/button&gt;
+                        &lt;/p&gt;
+                    &lt;/div&gt;
+                    &lt;div class=&quot;front&quot; ng-class=&quot;{flip: answered}&quot;&gt;
+                        &lt;p class=&quot;lead&quot;&gt;{{title}}&lt;/p&gt;
+                        &lt;div class=&quot;row text-center&quot;&gt;
+                            &lt;button class=&quot;btn btn-info btn-lg option&quot; ng-repeat=&quot;option in options&quot; ng-click=&quot;sendAnswer(option)&quot; ng-disabled=&quot;working&quot;&gt;{{option.title}}&lt;/button&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/section&gt;
+&lt;/div&gt;
+
+@section scripts {
+    @Scripts.Render(&quot;~/Scripts/angular.js&quot;)
+    @Scripts.Render(&quot;~/Scripts/app/quiz-controller.js&quot;)
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The AngularJS template is a declarative specification that uses information from the model and the controller to transform static markup into the dynamic view that the user sees in the browser. The following are examples of AngularJS elements and element attributes that can be used in a template:</p>
+
+<ul>
+<li>The <strong>ng-app</strong> directive tells AngularJS the DOM element that represents the root element of the application. </li>
+<li>The <strong>ng-controller</strong> directive attaches  a controller to the DOM at the point where the directive is declared.</li>
+<li>The curly brace notation <strong>{{ }}</strong> denotes bindings to the scope properties defined in the controller.</li>
+<li>The <strong>ng-click</strong> directive is used to invoke the functions defined in the scope in response to user clicks.</li>
+</ul>
+</blockquote></li>
+<li><p>Open the <strong>Site.css</strong> file inside the <strong>Content</strong> folder and add the following highlighted styles at the end of the file to provide a look and feel for the quiz view.</p>
+
+<p>(Code Snippet - <em>AspNetWebApiSpa - Ex2 - GeekQuizStyles</em>)</p>
+
+<!--mark:5-42-->
+
+<pre><code class="CSS">.validation-summary-valid {
+     display: none;
+}
+
+/* Geek Quiz styles */
+.flip-container .back,
+.flip-container .front {
+     border: 5px solid #00bcf2;
+     padding-bottom: 30px;
+     padding-top: 30px;
+}
+
+#content {
+    position:relative;
+    background:#fff;
+    padding:50px 0 0 0;
+}
+
+.option {
+     width:140px;
+     margin: 5px;
+}
+
+div.correct p {
+     color: green;
+}
+
+div.incorrect p {
+     color: red;
+}
+
+.btn {
+     border-radius: 0;
+}
+
+.flip-container div.front, .flip-container div.back.flip {
+    display: block;
+}
+
+.flip-container div.front.flip, .flip-container div.back {
+    display: none;
+}
+</code></pre></li>
+</ol>
+
+<p><a name="Ex2Task2" /></p>
+
+<h4>Task 2 – Running the Solution</h4>
+
+<p>In this task you will execute the solution using the new user interface you built with AngularJS to answer some of the quiz questions.</p>
+
+<ol>
+<li><p>Press <strong>F5</strong> to run the solution. </p></li>
+<li><p>Register a new user account. To do this, follow the registration steps described in Exercise 1, Task 3.</p>
+<blockquote>
+<p><strong>Note:</strong> If you are using the solution from the previous exercise, you can log in with the user account you created before.</p>
+</blockquote></li>
+<li><p>The <strong>Home</strong> page should appear, showing the first question of the quiz. Answer the question by clicking one of the options. This will trigger the <strong>sendAnswer</strong> function defined earlier, which sends the selected option to the <strong>Trivia</strong> Web API.</p>
+
+<p><img src="Images/answering-a-question.png?raw=true" alt="Answering a question" title="Answering a question">
+</p>
+
+<p><em>Answering a question</em></p></li>
+<li><p>After clicking one of the buttons, the answer should appear. Click <strong>Next Question</strong> to show the following question. This will trigger the <strong>nextQuestion</strong> function defined in the controller.</p>
+
+<p><img src="Images/requesting-the-next-question.png?raw=true" alt="Requesting the next question" title="Requesting the next question">
+</p>
+
+<p><em>Requesting the next question</em></p></li>
+<li><p>The next question should appear. Continue answering questions as many times as you want. After completing all the questions you should return to the first question.</p>
+
+<p><img src="Images/another-question.png?raw=true" alt="Another question" title="Another question">
+</p>
+
+<p><em>Next question</em></p></li>
+<li><p>Go back to Visual Studio and press <strong>SHIFT + F5</strong> to stop debugging.</p></li>
+</ol>
+
+<p><a name="Ex2Task3" /></p>
+
+<h4>Task 3 – Creating a Flip Animation Using CSS3</h4>
+
+<p>In this task you will use CSS3 properties to perform rich animations by adding a flip effect when a question is answered and when the next question is retrieved.</p>
+
+<ol>
+<li><p>In <strong>Solution Explorer</strong>, right-click the <strong>Content</strong> folder of the <strong>GeekQuiz</strong> project and select <strong>Add | Existing Item...</strong>.</p>
+
+<p><img src="Images/adding-an-existing-item-to-the-content-folder.png?raw=true" alt="Adding an existing item to the Content folder" title="Adding an existing item to the Content folder">
+</p>
+
+<p><em>Adding an existing item to the Content folder</em></p></li>
+<li><p>In the <strong>Add Existing Item</strong> dialog box, navigate to the <strong>Source/Assets</strong> folder and select <strong>Flip.css</strong>. Click <strong>Add</strong>.</p>
+
+<p><img src="Images/adding-the-flipcss-file-from-assets.png?raw=true" alt="Adding the Flip.css file from Assets" title="Adding the Flip.css file from Assets">
+</p>
+
+<p><em>Adding the Flip.css file from Assets</em></p></li>
+<li><p>Open the <strong>Flip.css</strong> file you just added and inspect its content.</p></li>
+<li><p>Locate the <strong>flip transformation</strong> comment. The styles below that comment use the CSS <strong>perspective</strong> and <strong>rotateY</strong> transformations to generate a &quot;card flip&quot; effect.</p>
+
+<pre><code class="CSS">/* flip transformation */
+.flip-container div.front {
+    -moz-transform: perspective(2000px) rotateY(0deg);
+    -webkit-transform: perspective(2000px) rotateY(0deg);
+    -o-transform: perspective(2000px) rotateY(0deg);
+    transform: perspective(2000px) rotateY(0deg);
+}
+
+    .flip-container div.front.flip {
+        -moz-transform: perspective(2000px) rotateY(179.9deg);
+        -webkit-transform: perspective(2000px) rotateY(179.9deg);
+        -o-transform: perspective(2000px) rotateY(179.9deg);
+        transform: perspective(2000px) rotateY(179.9deg);
+    }
+
+.flip-container div.back {
+    -moz-transform: perspective(2000px) rotateY(-180deg);
+    -webkit-transform: perspective(2000px) rotateY(-180deg);
+    -o-transform: perspective(2000px) rotateY(-180deg);
+    transform: perspective(2000px) rotateY(-180deg);
+}
+
+    .flip-container div.back.flip {
+        -moz-transform: perspective(2000px) rotateY(0deg);
+        -webkit-transform: perspective(2000px) rotateY(0deg);
+        -ms-transform: perspective(2000px) rotateY(0);
+        -o-transform: perspective(2000px) rotateY(0);
+        transform: perspective(2000px) rotateY(0);
+    }
+
+</code></pre></li>
+<li><p>Locate the <strong>hide back of pane during flip</strong> comment. The style below that comment hides the back-side of the faces when they are facing away from the viewer by setting the <strong>backface-visibility</strong> CSS property to <em>hidden</em>.</p>
+
+<pre><code class="CSS">/* hide back of pane during flip */
+.front, .back {
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+</code></pre></li>
+<li><p>Open the <strong>BundleConfig.cs</strong> file inside the <strong>App_Start</strong> folder and add the reference to the <strong>Flip.css</strong> file in the <strong>&quot;~/Content/css&quot;</strong> style bundle</p>
+
+<!--mark:4-->
+
+<pre><code class="C#">bundles.Add(new StyleBundle(&quot;~/Content/css&quot;).Include(
+    &quot;~/Content/bootstrap.css&quot;,
+    &quot;~/Content/site.css&quot;,
+    &quot;~/Content/Flip.css&quot;));
+</code></pre></li>
+<li><p>Press <strong>F5</strong> to run the solution and log in with your credentials.</p></li>
+<li><p>Answer a question by clicking one of the options. Notice the flip effect when transitioning between views.</p>
+
+<p><img src="Images/answering-a-question-with-the-flip-effect.png?raw=true" alt="Answering a question with the flip effect" title="Answering a question with the flip effect">
+</p>
+
+<p><em>Answering a question with the flip effect</em></p></li>
+<li><p>Click <strong>Next Question</strong> to retrieve the following question. The flip effect should appear again.</p>
+
+<p><img src="Images/retriving-the-following-question-with-the-fli.png?raw=true" alt="Retrieving the following question with the flip effect" title="Retrieving the following question with the flip effect">
+</p>
+
+<p><em>Retrieving the following question with the flip effect</em></p></li>
+</ol>
+
+<hr>
+
+<p><a name="Summary" /></p>
+
+<h2>Summary</h2>
+
+<p>By completing this hands-on lab you have learned how to:</p>
+
+<ul>
+<li><p>Create an ASP.NET Web API controller using ASP.NET Scaffolding</p></li>
+<li><p>Implement a Web API Get action to retrieve the next quiz question</p></li>
+<li><p>Implement a Web API Post action to store the quiz answers</p></li>
+<li><p>Install AngularJS from the Visual Studio Package Manager Console</p></li>
+<li><p>Implement AngularJS templates and controllers</p></li>
+<li><p>Use CSS3 transitions to perform animation effects</p></li>
+</ul>

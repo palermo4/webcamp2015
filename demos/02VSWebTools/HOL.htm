@@ -1,0 +1,658 @@
+<p><a name="HOLTop" /></p>
+
+<h1>Visual Studio 2013 Web Tooling</h1>
+
+<hr>
+
+<p><a name="Overview" /></p>
+
+<h2>Overview</h2>
+
+<p>Visual Studio is an excellent development environment for .NET-based Windows and web projects. It includes a powerful text editor that can easily be used to edit standalone files without a project.</p>
+
+<p>Visual Studio maintains a full-featured parse tree as you edit each file. This allows Visual Studio to provide unparalleled auto-completion and document-based actions while making the development experience much faster and more pleasant. These features are especially powerful in HTML and CSS documents.</p>
+
+<p>All of this power is also available for extensions, making it simple to extend the editors with powerful new features to suit your needs. Web Essentials is a collection of (mostly) web-related enhancements to Visual Studio. It includes lots of new IntelliSense completions (especially for CSS), new Browser Link features, automatic JSHint for JavaScript files, new warnings for HTML and CSS, and many other features that are essential to modern web development.</p>
+
+<p><a name="Objectives" /></p>
+
+<h3>Objectives</h3>
+
+<p>In this hands-on lab, you will learn how to:</p>
+
+<ul>
+<li>Use new HTML editor features included in Web Essentials such as rich HTML5 code snippets and Zen coding </li>
+<li>Use new CSS editor features included in Web Essentials such as the Color picker and Browser matrix tooltip</li>
+<li>Use new JavaScript editor features included in Web Essentials such as Extract to File and IntelliSense for all HTML elements</li>
+<li>Exchange data between your browser and Visual Studio using Browser Link</li>
+</ul>
+
+<p><a name="Prerequisites"></a></p>
+
+<h3>Prerequisites</h3>
+
+<p>The following is required to complete this hands-on lab:</p>
+
+<ul>
+<li><a href="http://www.microsoft.com/visualstudio/">Microsoft Visual Studio Professional 2013</a> or greater</li>
+<li><a href="http://vswebessentials.com/">Web Essentials 2013</a></li>
+<li><a href="http://www.google.com/chrome/">Google Chrome</a></li>
+</ul>
+
+<p><a name="Setup" /></p>
+
+<h3>Setup</h3>
+
+<p>In order to run the exercises in this hands-on lab, you will need to set up your environment first.</p>
+
+<ol>
+<li>Open a Windows Explorer window and browse to the lab's <strong>Source</strong> folder.</li>
+<li>Right-click <strong>Setup.cmd</strong> and select <strong>Run as administrator</strong> to launch the setup process that will configure your environment and install the Visual Studio code snippets for this lab.</li>
+<li>If the User Account Control dialog box is shown, confirm the action to proceed.</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Make sure you have checked all the dependencies for this lab before running the setup.</p>
+</blockquote>
+<p><a name="CodeSnippets" /></p>
+
+<h3>Using the Code Snippets</h3>
+
+<p>Throughout the lab document, you will be instructed to insert code blocks. For your convenience, most of this code is provided as Visual Studio Code Snippets, which you can access from within Visual Studio 2013 to avoid having to add it manually. </p>
+<blockquote>
+<p><strong>Note</strong>: Each exercise is accompanied by a starting solution located in the <strong>Begin</strong> folder of the exercise that allows you to follow each exercise independently of the others. Please be aware that the code snippets that are added during an exercise are missing from these starting solutions and may not work until you have completed the exercise. Inside the source code for an exercise, you will also find an <strong>End</strong> folder containing a Visual Studio solution with the code that results from completing the steps in the corresponding exercise. You can use these solutions as guidance if you need additional help as you work through this hands-on lab.</p>
+</blockquote>
+<hr>
+
+<p><a name="Exercises" /></p>
+
+<h2>Exercises</h2>
+
+<p>This hands-on lab includes the following exercises:</p>
+
+<ol>
+<li><a href="#Exercise1">Working with Browser Link and Web Essentials</a></li>
+<li><a href="#Exercise2">Taking Advantage of Code Snippets and IntelliSense</a></li>
+</ol>
+
+<p>Estimated time to complete this lab: <strong>[TBC] minutes</strong></p>
+<blockquote>
+<p><strong>Note:</strong> When you first start Visual Studio, you must select one of the predefined settings collections. Each predefined collection is designed to match a particular development style and determines window layouts, editor behavior, IntelliSense code snippets, and dialog box options. The procedures in this lab describe the actions necessary to accomplish a given task in Visual Studio when using the <strong>General Development Settings</strong> collection. If you choose a different settings collection for your development environment, there may be differences in the steps that you should take into account.</p>
+</blockquote>
+<p><a name="Exercise1" /></p>
+
+<h3>Exercise 1: Working with Browser Link and Web Essentials</h3>
+
+<p><strong>Web Essentials</strong> is a Visual Studio extension that adds a variety of useful features for modern web development, mostly focused on making the web development experience much faster and more pleasant. You can install Web Essentials from the Extension Gallery in Visual Studio.</p>
+
+<p><strong>Browser Link</strong> is a new feature included in Visual Studio 2013 that provides a channel between the Visual Studio IDE and any open browser to exchange data between your web application and Visual Studio. Web Essentials extends Browser Link with tools to manipulate the DOM object model and the CSS styles of your web pages directly from the browser.</p>
+
+<p>In this exercise, you will explore some of the features supported by <strong>Web Essentials</strong> and <strong>Browser Link</strong> to enhance a simple quiz page. </p>
+
+<p><a name="Ex1Task1" /></p>
+
+<h4>Task 1 - Running the Project in Multiple Browsers</h4>
+
+<p>In this task, you will configure your web application to run in multiple browsers at once, which is useful for cross-browser testing.</p>
+
+<ol>
+<li><p>Open <strong>Microsoft Visual Studio</strong>. </p></li>
+<li><p>In the <strong>File</strong> menu, select <strong>Open | Project/Solution...</strong> and browse to <strong>Ex1-WorkingwithBrowserLinkandWebEssentials\Begin</strong> in the <strong>Source</strong> folder of the lab. Select <strong>Begin.sln</strong> and click <strong>Open</strong>.</p></li>
+<li><p>In the Visual Studio toolbar, expand the browser menu and select <strong>Browse With...</strong>.</p>
+
+<p><img src="Images/browse-with-in-browser-menu.png?raw=true" alt="Browse With menu option" title="Browse with... in browser menu">
+</p>
+
+<p><em>Browse With menu option</em></p></li>
+<li><p>In the <strong>Browse With</strong> dialog box, select both <strong>Google Chrome</strong> and <strong>Internet Explorer</strong> by holding down the <strong>CTRL</strong> key and click <strong>Set as Default</strong>.</p>
+
+<p><img src="Images/browse-with-dialog-box.png?raw=true" alt="Browse with dialog box" title="Browse with dialog box">
+</p>
+
+<p><em>Selecting multiple default browsers</em></p></li>
+<li><p>Both Google Chrome and Internet Explorer should now appear as the default browsers. Click <strong>Cancel</strong> to close the dialog box.</p>
+
+<p><img src="Images/google-chrome-and-internet-explorer-default-b.png?raw=true" alt="Google Chrome and Internet Explorer as default browsers" title="Google Chrome and Internet Explorer default browsers">
+</p>
+
+<p><em>Google Chrome and Internet Explorer as default browsers</em></p>
+<blockquote>
+<p><strong>Note:</strong> After configuring the default browsers, the <strong>Multiple Browsers</strong> option is selected in the browser menu.</p>
+
+<p><img src="Images/multiple-browsers.png?raw=true" alt="Multiple browsers" title="Multiple browsers">
+</p>
+</blockquote></li>
+<li><p>Press <strong>CTRL</strong> + <strong>F5</strong> to run the application without debugging.</p></li>
+<li><p>When both browser windows open, place one of them above the other in order to see the updates on both browsers simultaneously. The browsers should display a web page with a light-blue rectangle.</p>
+
+<p><img src="Images/placing-one-browser-above-the-other.png?raw=true" alt="Placing one browser above the other" title="Placing one browser above the other">
+</p>
+
+<p><em>Placing one browser above the other</em></p></li>
+<li><p>Do not close the browsers. You will use them in the next task. </p></li>
+</ol>
+
+<p><a name="Ex1Task2" /></p>
+
+<h4>Task 2 - Using Zen Coding to Create HTML Elements</h4>
+
+<p><strong>Zen Coding</strong> is an editor plugin for high-speed HTML, XML, XSL (or any other structured code format) coding and editing. The core of this plugin is a powerful abbreviation engine which allows you to expand expressions -similar to CSS selectors- into HTML code. Zen Coding is a fast way to write HTML using a CSS style selector syntax.</p>
+
+<p>In this exercise, you will use the Zen Coding feature provided by Web Essentials to generate the HTML buttons that represent the options of the question.</p>
+
+<ol>
+<li><p>Switch back to Visual Studio.</p></li>
+<li><p>Open the <strong>Index.cshtml</strong> file located in the <strong>Views</strong> | <strong>Home</strong> folder.</p></li>
+<li><p>Replace the <strong>&lt;!-- TODO: add options here--&gt;</strong> comment with the following code, and press <strong>TAB</strong>.</p>
+
+<!-- mark:1 -->
+
+<pre><code class="HTML">button.btn.btn-info.btn-lg.option{Answer $}*4 
+</code></pre></li>
+<li><p>The code should be expanded to HTML.</p>
+
+<p><img src="Images/expanded-html.png?raw=true" alt="Expanded HTML" title="Expanded HTML">
+</p>
+
+<p><em>Expanded HTML</em></p>
+<blockquote>
+<p><strong>Note:</strong> To learn more about Zen Coding syntax, see the following <a href="http://www.johnpapa.net/zen-coding-in-visual-studio-2012/">article</a>.</p>
+</blockquote></li>
+<li><p>Click the <strong>Refresh linked browsers</strong> button to update both browsers.</p>
+
+<p><img src="Images/refresh-linked-browsers.png?raw=true" alt="Refresh linked browsers" title="Refresh linked browsers">
+</p>
+
+<p><em>Refresh linked browsers</em></p>
+
+<p><img src="Images/internet-explorer-updated-with-4-buttons.png?raw=true" alt="Internet Explorer - Page updated with four buttons" title="Internet Explorer - Page updated with four buttons">
+</p>
+
+<p><em>Internet Explorer - Page updated with four buttons</em></p>
+
+<p><img src="Images/google-chrome-updated-with-4-buttons.png?raw=true" alt="Google Chrome - Page updated with four buttons" title="Google Chrome - Page updated with four buttons">
+</p>
+
+<p><em>Google Chrome - Page updated with four buttons</em></p></li>
+<li><p>Switch back to Visual Studio.</p></li>
+<li><p>You have added the buttons to the page, but you still need to add a template question. To do so, you will use a new feature in Web Essentials called <strong>Lorem Ipsum generator</strong>. Locate the <strong>div</strong> element with the <strong>class</strong> attribute <strong>front</strong>.</p></li>
+<li><p>Add the following code as the first child element of the <strong>div</strong>, and press <strong>TAB</strong>.</p>
+
+<pre><code class="HTML">p.lead&gt;lorem5
+</code></pre></li>
+<li><p>The code should be expanded to HTML.</p>
+
+<p><img src="Images/lorem-ipsum-autogenerated.png?raw=true" alt="Lorem Ipsum autogenerated" title="Lorem Ipsum autogenerated">
+</p>
+
+<p><em>Lorem Ipsum autogenerated</em></p>
+<blockquote>
+<p><strong>Note:</strong> As part of Zen Coding, you can now generate Lorem Ipsum code directly in the HTML editor. Simply type <strong>lorem</strong> and hit <strong>TAB</strong> and a 30 word Lorem Ipsum text will be inserted. E.g. <em>lorem10</em> inserts 10 Lorem Ipsum words.</p>
+</blockquote></li>
+<li><p>You will add a logo at the top of the question by using another new feature in Web Essentials called <strong>Lorem Pixel generator</strong>. Add the following code as the first child element of the <strong>div</strong> element with <strong>container</strong> as <strong>class</strong> value, and press <strong>TAB</strong>.</p>
+
+<pre><code class="HTML">div.row.header&gt;pix-436x185-abstract
+</code></pre></li>
+<li><p>The code should expand to HTML.</p>
+
+<p><img src="Images/lorem-pixel-autogenerated.png?raw=true" alt="Lorem Pixel autogenerated" title="Lorem Pixel autogenerated">
+</p>
+
+<p><em>Lorem Pixel autogenerated</em></p>
+<blockquote>
+<p><strong>Note:</strong> As part of Zen Coding, you can also generate Lorem Pixel code directly in the HTML editor. Simply type <strong>pix-200x200-animals</strong> and hit <strong>TAB</strong> and an <strong>img</strong> tag with a 200x200 image of an animal will be inserted. For more information, refer to <a href="http://www.lorempixel.com">Lorem Pixel</a>.</p>
+</blockquote></li>
+<li><p>Click the <strong>Refresh linked browsers</strong> button to update both browsers.</p>
+
+<p><img src="Images/internet-explorer---autogenerated-image-and-t.png?raw=true" alt="Internet Explorer - Autogenerated image and text" title="Internet Explorer - Autogenerated image and text">
+</p>
+
+<p><em>Internet Explorer - Autogenerated image and text</em></p>
+
+<p><img src="Images/google-chrome---autogenerated-image-and-text.png?raw=true" alt="Google Chrome - Autogenerated image and text" title="Google Chrome - Autogenerated image and text">
+</p>
+
+<p><em>Google Chrome - Autogenerated image and text</em></p>
+<blockquote>
+<p><strong>Note:</strong> Because the image is selected randomly when adding the code snippet, the image shown in the browsers may differ.</p>
+</blockquote></li>
+<li><p>Do not close the browsers. You will use them in the next task.</p></li>
+</ol>
+
+<p><a name="Ex1Task3" /></p>
+
+<h4>Task 3 - Updating a Style Property</h4>
+
+<p>In this task, you will use the Browser Link's <strong>Inspect Mode</strong> feature to detect the exact location where the specific DOM element is generated and then update the color property of that element using a color picker provided by Web Essentials.</p>
+
+<ol>
+<li><p>In the Internet Explorer browser, press <strong>CTRL</strong> + <strong>ALT</strong> + <strong>I</strong> to enable Inspect Mode.</p></li>
+<li><p>Move the pointer over the light blue border and click.</p>
+
+<p><img src="Images/mouse-over-the-light-blue-border.png?raw=true" alt="Moving the pointer over the light blue border" title="Moving the pointer over the light blue border">
+</p>
+
+<p><em>Moving the pointer over the light blue border</em></p></li>
+<li><p>Switch back to Visual Studio. Notice how the HTML element that you selected in the browser is also selected in the Visual Studio HTML editor.</p>
+
+<p><img src="Images/html-element-highlighted.png?raw=true" alt="HTML element selected in the Visual Studio HTML editor" title="HTML element selected in the Visual Studio HTML editor">
+</p>
+
+<p><em>HTML element selected in the Visual Studio HTML editor</em></p></li>
+<li><p>You will now update the <strong>front</strong> CSS class in order to change the styling of the selected element. To do so, press <strong>CTRL</strong> + <strong>,</strong> to open the <strong>Navigate To</strong> search box. Type <strong>site.css</strong> and press <strong>ENTER</strong> to open the file.</p>
+
+<p><img src="Images/sitecss-file-found.png?raw=true" alt="Opening file Site.css" title="Opening file Site.css">
+</p>
+
+<p><em>Opening file Site.css</em></p></li>
+<li><p>Press <strong>CTRL</strong> + <strong>F</strong> and type <strong>.flip-containter .front</strong> to find the CSS selector. </p></li>
+<li><p>Click the light blue square in the border property of the class to open the Color Picker.</p>
+
+<p><img src="Images/opening-the-color-picker.png?raw=true" alt="Opening the Color Picker" title="Opening the Color Picker">
+</p>
+
+<p><em>Opening the Color Picker</em></p></li>
+<li><p>Expand the Color Picker by clicking the chevron button and select a new color.</p>
+
+<p><img src="Images/expanding-the-color-picker.png?raw=true" alt="Expanding the Color Picker" title="Expanding the Color Picker">
+</p>
+
+<p><em>Expanding the Color Picker</em></p></li>
+<li><p>Press <strong>CTRL</strong> + <strong>ALT</strong> + <strong>ENTER</strong> to refresh linked browsers. </p></li>
+<li><p>Switch to Internet Explorer and notice how the color of the border has changed.</p>
+
+<p><img src="Images/internet-explorer-border-color-updated.png?raw=true" alt="Internet Explorer - Border color updated" title="Internet Explorer - Border color updated">
+</p>
+
+<p><em>Internet Explorer - Border color updated</em></p></li>
+<li><p>Switch to Google Chrome and notice how the color of the border has changed.</p>
+
+<p><img src="Images/google-chrome-border-color-updated.png?raw=true" alt="Google Chrome - Border color updated" title="Google Chrome - Border color updated">
+</p>
+
+<p><em>Google Chrome - Border color updated</em></p></li>
+<li><p>Switch back to Visual Studio.</p></li>
+<li><p>Go to the end of the <strong>Site.css</strong> file and press <strong>CTRL</strong> + <strong>F</strong> to locate the <strong>.btn</strong> selector.</p></li>
+<li><p>Notice that the <strong>-webkit-border-radius</strong> property is underlined in green.</p>
+
+<p><img src="Images/-webkit-border-radius-property-of-the-btn-sel.png?raw=true" alt="-webkit-border-radius property of the btn selector" title="-webkit-border-radius property of the btn selector">
+</p>
+
+<p><em>-webkit-border-radius property of the btn selector</em></p></li>
+<li><p>Place the caret in the <strong>-webkit-border-radius</strong> property. A blue line should appear under the first letter of the first word of the property. This is the <strong>smart tag</strong>.</p></li>
+<li><p>Press <strong>CTRL</strong> + <strong>.</strong> to open the suggestions menu and click <strong>Add missing standard property (border-radius)</strong>.</p>
+
+<p><img src="Images/add-missing-standard-properties-suggestion.png?raw=true" alt="Add missing standard property suggestion" title="Add missing standard property suggestion">
+</p>
+
+<p><em>Add missing standard property suggestion</em></p></li>
+<li><p>The <strong>border-radius</strong> property is automatically added to the CSS rule.</p>
+
+<p><img src="Images/missing-standard-property-added.png?raw=true" alt="Missing standard property added" title="Missing standard property added">
+</p>
+
+<p><em>Missing standard property added</em></p></li>
+<li><p>Move the pointer over the <strong>border-radius</strong> property to display the <strong>Browser matrix tooltip</strong>. The <strong>Browser matrix tooltip</strong> shows the availability of the property in each browser.</p>
+
+<p><img src="Images/browser-matrix-tooltip.png?raw=true" alt="Browser matrix tooltip" title="Browser matrix tooltip">
+</p>
+
+<p><em>Browser matrix tooltip</em></p></li>
+<li><p>Notice that the value of the <strong>border-radius</strong> property is still underlined. Move the pointer over the value to see the warning message.</p>
+
+<p><img src="Images/border-radius-property-value-warning.png?raw=true" alt="Border-radius property value warning" title="Border-radius property value warning">
+</p>
+
+<p><em>Border-radius property value warning</em></p></li>
+<li><p>Remove the unit of the <strong>border-radius</strong> property value as suggested by the tooltip.</p></li>
+<li><p>As <strong>border-radius</strong> is the standard property for defining how rounded border corners are, you can remove the <strong>-webkit-border-radius</strong> property and value from the CSS rule.</p></li>
+<li><p>Place the caret in the <strong>word-wrap</strong> property and notice that the smart tag also appears below.</p></li>
+<li><p>Open the menu and click <strong>Add missing vendor specifics</strong>.</p>
+
+<p><img src="Images/add-missing-vendor-specifics-suggestion.png?raw=true" alt="Add missing vendor specifics suggestion" title="Add missing vendor specifics suggestion">
+</p>
+
+<p><em>Add missing vendor specifics suggestion</em></p></li>
+<li><p>The  <strong>-ms-word-wrap</strong> property is automatically added to the CSS rule.</p>
+
+<p><img src="Images/vendor-specific-property-added.png?raw=true" alt="Vendor specific property added" title="Vendor specific property added">
+</p>
+
+<p><em>Vendor specific property added</em></p></li>
+</ol>
+
+<p><a name="Ex1Task4" /></p>
+
+<h4>Task 4 - Updating the HTML Code from the Browser</h4>
+
+<p>In this task, you will use the Browser Link's <strong>Design Mode</strong> feature to edit the DOM object from the browser and transfer the changes to the HTML source file in Visual Studio.</p>
+
+<ol>
+<li><p>In Google Chrome, press <strong>CTRL</strong> + <strong>ALT</strong> + <strong>D</strong> to enable Design Mode.</p></li>
+<li><p>Move the pointer over the <strong>Lorem Ipsum dolor sit amet</strong> label and click.</p>
+
+<p><img src="Images/editing-the-question.png?raw=true" alt="Editing the question" title="Editing the question">
+</p>
+
+<p><em>Editing the question</em></p></li>
+<li><p>A cursor should appear. Replace the original text with <em>What does it look like when I write a longer question?</em>, and then press <strong>ESC</strong> to exit Design Mode.</p>
+
+<p><img src="Images/question-edited.png?raw=true" alt="Question edited" title="Question edited">
+</p>
+
+<p><em>Question edited</em></p></li>
+<li><p>Switch back to Visual Studio and open <strong>Index.cshtml</strong>, if not already opened. Notice that the inner text of the <strong>&lt;p&gt;</strong> element has been updated.</p>
+
+<p><img src="Images/updated-question-in-the-html-page.png?raw=true" alt="Updated question in the HTML page" title="Updated question in the HTML page">
+</p>
+
+<p><em>Updated question in the HTML page</em></p></li>
+</ol>
+
+<p><a name="Ex1Task5" /></p>
+
+<h4>Task 5 - Reviewing SEO Related Warnings</h4>
+
+<p><strong>Search Engine Optimization</strong> (SEO) is the process of making a website rank higher on a search engine's list of results. The higher the site ranks and the more consistently it is listed, the more visitors the site will get from that search engine. Web Essentials incorporates an analytical tool that examines HTML, reports the issues found and provides assistance to fix them.</p>
+
+<ol>
+<li><p>Go to the <strong>View</strong> menu and click <strong>Error List</strong> to open the <strong>Error List</strong> window.</p>
+
+<p><img src="Images/error-list-in-view-menu.png?raw=true" alt="Error List in View menu" title="Error List in View menu">
+</p>
+
+<p><em>Error List in View menu</em></p></li>
+<li><p>Notice that there is an SEO warning notifying that a <strong>&lt;meta&gt;</strong> tag for the page description is missing. Double-click the SEO warning entry to fix it.</p>
+
+<p><img src="Images/error-list-window.png?raw=true" alt="Error List window" title="Error List window">
+</p>
+
+<p><em>Error List window</em></p></li>
+<li><p>In the <strong>Web Essentials</strong> dialog box, click <strong>Yes</strong> to insert a description &lt;meta&gt; tag.</p>
+
+<p><img src="Images/web-essentials-dialog-box.png?raw=true" alt="Web Essentials dialog box" title="Web Essentials dialog box">
+</p>
+
+<p><em>Web Essentials dialog box</em></p></li>
+<li><p>The editor for <strong>_Layout.cshtml</strong> opens and the <strong>&lt;meta&gt;</strong> tag is automatically added to the <strong>head</strong> section of the HTML file.</p>
+
+<p><img src="Images/meta-tag-automatically-added-in-layout-page.png?raw=true" alt="Meta tag automatically added in _Layout page" title="Meta tag automatically added in _Layout page">
+</p>
+
+<p><em>Meta tag automatically added to _Layout page</em></p></li>
+<li><p>Change the value of the <strong>content</strong> attribute to <em>GeekQuiz</em> and save the file.</p></li>
+</ol>
+
+<p><a name="Exercise2" /></p>
+
+<h3>Exercise 2: Taking Advantage of Code Snippets and IntelliSense</h3>
+
+<p>With Web Essentials, the HTML editor has been extended with extra functionality. In this exercise, you will see some new features that are helpful when developing web applications.</p>
+
+<p><a name="Ex2Task1" /></p>
+
+<h4>Task 1 - Using IntelliSense in HTML Documents</h4>
+
+<p>The first new feature you will see in this task is called <strong>Dynamic IntelliSense</strong>. Dynamic IntelliSense reads other tags and attributes to infer the possible ids you will use. </p>
+
+<p>In this task, you will create a new HTML form element which contains a label and an input field. Then you will add a <strong>for</strong> attribute to the label to bind it to the input, and you will see IntelliSense suggestions based on the ids of the inputs in scope.</p>
+
+<ol>
+<li><p>Open <strong>Visual Studio Express 2013 for Web</strong> and the <strong>Begin.sln</strong> solution located in the <strong>Source/Ex2-TakingAdvantageofCodeSnippetsandIntelliSense/Begin</strong> folder. Alternatively, you can continue with the solution that you obtained in the previous exercise.</p></li>
+<li><p>In <strong>Solution Explorer</strong>, open the <strong>Index.cshtml</strong> file located in the <strong>Views</strong> | <strong>Home</strong> folder.</p></li>
+<li><p>Add the following form inside the <strong>&lt;section&gt;</strong> element. </p>
+
+<p>(Code Snippet - <em>VisualStudio2013WebTooling</em> - <em>Ex2</em> - <em>Form</em>)</p>
+
+<!-- mark:1-3 -->
+
+<pre><code class="HTML">&lt;form&gt;
+     &lt;input type=&quot;text&quot; id=&quot;name&quot; /&gt;
+&lt;/form&gt;
+</code></pre></li>
+<li><p>The input tag should be preceded by a label with some description of the field. Add the following label before the input tag.</p>
+
+<!-- mark:2 -->
+
+<pre><code class="HTML">&lt;form&gt;
+    &lt;label id=&quot;name&quot;&gt;Name&lt;/label&gt;       
+    &lt;input type=&quot;text&quot; id=&quot;name&quot; /&gt;
+&lt;/form&gt;
+</code></pre></li>
+<li><p>The <strong>for</strong> attribute of a <strong>&lt;label&gt;</strong> specifies which form element a label is bound to. The attribute's value should be equal to the id of the related element. Add the <strong>for</strong> attribute to the <strong>&lt;label&gt;</strong> element. As shown in the following figure, the &quot;name&quot; value pops up in the IntelliSense box, based on the id of the elements within the same scope (the enclosing <strong>&lt;form&gt;</strong>).</p>
+
+<p><img src="Images/showing-the-id-in-intellisense.png?raw=true" alt="Showing the id in IntelliSense" title="Showing the id in IntelliSense">
+</p>
+
+<p><em>Showing the id in IntelliSense</em></p></li>
+<li><p>Delete the recently added <strong>&lt;form&gt;</strong> element and its content.</p></li>
+</ol>
+
+<p><a name="Ex2Task2" /></p>
+
+<h4>Task 2 - Using HTML Code Snippets</h4>
+
+<p>HTML5 introduced more than 25 new semantic tags. Visual Studio already had IntelliSense support for these tags, but Visual Studio 2013 makes it faster and easier to write markup by adding new code snippets. Though these tags are not complicated, they come with a few small subtleties, such as adding the correct codec fallbacks for the <em>audio</em> tag. In this task, you will see the HTML code snippets for the audio tag.</p>
+
+<ol>
+<li><p>In the <strong>Index.cshtml</strong> file, type <strong>&lt;aud</strong> inside the <strong>&lt;section&gt;</strong> element as shown in the following figure.</p>
+
+<p><img src="Images/inserting-an-audio-element.png?raw=true" alt="Inserting an audio element" title="Inserting an audio element">
+</p>
+
+<p><em>Inserting an audio element</em></p></li>
+<li><p>Press <strong>TAB</strong> twice and notice how the following code is added on the page and the cursor is placed on the <strong>src</strong> attribute of the first source.</p>
+
+<pre><code class="HTML">&lt;audio controls=&quot;controls&quot;&gt;
+     &lt;source src=&quot;file.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
+     &lt;source src=&quot;file.ogg&quot; type=&quot;audio/ogg&quot; /&gt;
+&lt;/audio&gt;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> By pressing the <strong>TAB</strong> key twice, the code snippet is inserted. The audio snippet shows the standard usage of the <em>audio</em> tag, with two source files for improved support.</p>
+</blockquote></li>
+<li><p>Delete the second line and update the source of the first line with the following link to the WebCampsTV Katana show:
+<a href="http://media.ch9.ms/ch9/11d8/604b8163-fad3-4f12-9607-b404201211d8/KatanaProject.mp3">http://media.ch9.ms/ch9/11d8/604b8163-fad3-4f12-9607-b404201211d8/KatanaProject.mp3</a>. The resulting code is shown below.</p>
+
+<!-- mark:2 -->
+
+<pre><code class="HTML">&lt;audio controls=&quot;controls&quot;&gt;
+     &lt;source src=&quot;http://media.ch9.ms/ch9/11d8/604b8163-fad3-4f12-9607-b404201211d8/KatanaProject.mp3&quot; type=&quot;audio/mp3&quot; /&gt;
+&lt;/audio&gt;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The source file <em>KatanaProject.mp3</em> is used as an example. You can use another source if you prefer.</p>
+</blockquote></li>
+<li><p>Press <strong>CTRL</strong> + <strong>S</strong> to save the file.</p></li>
+<li><p>Press <strong>CTRL</strong> + <strong>F5</strong> to start the application.</p></li>
+<li><p>Notice that an audio player was added to the application.</p>
+
+<p><img src="Images/audio-player-in-internet-explorer.png?raw=true" alt="Audio player in Internet Explorer" title="Audio player in Internet Explorer">
+</p>
+
+<p><em>Audio player in Internet Explorer</em></p>
+
+<p><img src="Images/audio-player-in-google-chrome.png?raw=true" alt="Audio player in Google Chrome" title="Audio player in Google Chrome">
+</p>
+
+<p><em>Audio player in Google Chrome</em></p></li>
+<li><p>Do not close the browsers. You will use them in the next task.</p></li>
+</ol>
+
+<p><a name="Ex2Task3" /></p>
+
+<h4>Task 3 - Using IntelliSense in JavaScript Documents</h4>
+
+<p>With Web Essentials 2013, style sheets and HTML pages produce a list of IDs and class names. In this task, you will learn how those lists improve JavaScript IntelliSense support in Web Essentials 2013. </p>
+
+<ol>
+<li><p>In the <strong>Index.cshtml</strong> file, add the following code to define a <strong>script</strong> tag for JavaScript code.</p>
+
+<!-- mark:3-7 -->
+
+<pre><code class="HTML">    ...
+&lt;/section&gt;
+@section scripts{
+    &lt;script type=&quot;text/javascript&quot;&gt;
+
+    &lt;/script&gt;
+}
+</code></pre></li>
+<li><p>Add the following code inside the <strong>script</strong> tag to define the ready callback function.</p>
+
+<p>(Code Snippet - <em>VisualStudio2013WebTooling</em> - <em>Ex2</em> - <em>ReadyFunction</em>)</p>
+
+<!-- mark:1-5 -->
+
+<pre><code class="JavaScript">(function () {
+    $(document).ready(function () {
+
+    });
+}());
+</code></pre></li>
+<li><p>Place the caret in the <strong>script</strong> tag and press <strong>CTRL</strong> + <strong>.</strong> to open the suggestion menu.</p></li>
+<li><p>Click <strong>Extract To File</strong>.</p>
+
+<p><img src="Images/javascript-extract-to-file.png?raw=true" alt="JavaScript extract to file suggestion" title="JavaScript extract to file suggestion">
+</p>
+
+<p><em>JavaScript extract to file suggestion</em></p></li>
+<li><p>In the <strong>Save As</strong> window, select the <strong>Scripts</strong> folder, name the file <strong>init.js</strong> and click <strong>Save</strong>.</p>
+
+<p><img src="Images/save-as-window.png?raw=true" alt="Save As window" title="Save As window">
+</p>
+
+<p><em>Save As window</em></p>
+<blockquote>
+<p><strong>Note:</strong> The <strong>init.js</strong> file is created and the content of the script is moved to the file.</p>
+
+<p><img src="Images/initjs-file-created-with-the-content-included.png?raw=true" alt="Init.js file created with the content included" title="Init.js file created with the content included">
+</p>
+
+<p><em>Init.js file created with the content included</em></p>
+</blockquote></li>
+<li><p>Open the <strong>Index.cshtml</strong> file and check that the script tag was replaced with a reference to the <strong>init.js</strong> file.</p>
+
+<p><img src="Images/initjs-html-reference.png?raw=true" alt="Init.js html reference" title="Init.js html reference">
+</p>
+
+<p><em>Init.js html reference</em></p></li>
+<li><p>Go to the <strong>Solution Explorer</strong> and notice that the <strong>init.js</strong> file was included automatically in the solution.</p>
+
+<p><img src="Images/initjs-file-included-in-solution.png?raw=true" alt="Init.js file included in solution" title="Init.js file included in solution">
+</p>
+
+<p><em>Init.js file included in solution</em></p></li>
+<li><p>Switch back to the <strong>init.js</strong> file to update the <strong>ready</strong> function callback.</p></li>
+<li><p>Inside the function callback definition that is passed to <em>ready</em>, add the following code to get all the elements by a specific class attribute.</p>
+
+<!-- mark:3 -->
+
+<pre><code class="JavaScript">(function () {
+     $(document).ready(function () {
+          document.getElementsByClassName(&quot;&quot;)
+     });
+}());
+</code></pre></li>
+<li><p>Press <strong>CTRL</strong> + <strong>Space</strong> between the quotes inside the <strong>getElementsByClassName</strong> function call.</p>
+
+<p><img src="Images/byclassname.png?raw=true" alt="Showing IntelliSense for the getElementsByClassName function" title="Showing IntelliSense for the getElementsByClassName function">
+</p>
+
+<p><em>Showing IntelliSense for the getElementsByClassName function</em></p>
+<blockquote>
+<p><strong>Note:</strong> Notice that IntelliSense shows the classes defined in the project style sheets.</p>
+</blockquote></li>
+<li><p>Replace the line that you have created with the following code.</p>
+
+<!-- mark:3 -->
+
+<pre><code class="JavaScript">(function () {
+     $(document).ready(function () {
+          var audioElements = document.getElementsByTagName(&quot;au&quot;);
+     });
+}());
+</code></pre></li>
+<li><p>Position the cursor after <strong>au</strong> inside the quotes in the <strong>getElementsByTagName</strong> function and press <strong>CTRL</strong> + <strong>Space</strong>.</p>
+
+<p><img src="Images/getelementbytagname.png?raw=true" alt="Showing IntelliSense for the getElementByTagName method" title="Showing IntelliSense for the getElementByTagName method">
+</p>
+
+<p><em>Showing IntelliSense for the getElementsByTagName method</em></p></li>
+<li><p>Select <strong>&quot;audio&quot;</strong> from the list and press <strong>ENTER</strong>. The result is shown in the following figure.</p>
+
+<p><img src="Images/retrieve-audio-elements.png?raw=true" alt="Retrieving Audio Elements" title="Retrieving Audio Elements">
+</p>
+
+<p><em>Retrieving Audio Elements</em></p></li>
+<li><p>In <strong>Solution Explorer</strong>, right-click the <strong>init.js</strong> file in the <strong>Scripts</strong> folder and select <strong>Minify JavaScript file(s)</strong> from the <strong>Web Essentials</strong> menu.</p>
+
+<p><img src="Images/minify-javascript-files.png?raw=true" alt="Minify JavaScript file(s)" title="Minify JavaScript files">
+</p>
+
+<p><em>Minify JavaScript file(s)</em></p></li>
+<li><p>When prompted to enable automatic minification when the source file changes click <strong>Yes</strong>.</p>
+
+<p><img src="Images/enabling-automatic-minification-warning.png?raw=true" alt="Enabling automatic minification warning" title="Enabling automatic minification warning">
+</p>
+
+<p><em>Enabling automatic minification warning</em></p>
+<blockquote>
+<p><strong>Note:</strong> The <strong>init.min.js</strong> is created and is added as a dependency of the <strong>init.js</strong> file.</p>
+
+<p><img src="Images/initminjs-file-created.png?raw=true" alt="Init.min.js file created" title="Init.min.js file created">
+</p>
+
+<p><em>Init.min.js file created</em></p>
+</blockquote></li>
+<li><p>Open the <strong>init.min.js</strong> file and notice that the file is minified.</p>
+
+<p><img src="Images/initminjs-file-content.png?raw=true" alt="Init.min.js file content" title="Init.min.js file content">
+</p>
+
+<p><em>Init.min.js file content</em></p></li>
+<li><p>In the <strong>init.js</strong> file, add the following code below the <strong>getElementsByTagName</strong> function call to play all the audio elements.</p>
+
+<p>(Code Snippet - <em>VisualStudio2013WebTooling</em> - <em>Ex2</em> - <em>PlayAudioElements</em>)</p>
+
+<!-- mark:1-4 -->
+
+<pre><code class="JavaScript">var len = audioElements.length;
+for (var i = 0; i &lt; len; i++) {
+     audioElements[i].play();
+}   
+</code></pre></li>
+<li><p>Click <strong>CTRL</strong> + <strong>S</strong> to save the file. Since the minified file is already opened, you will see a dialog box saying that the file was modified outside of the source editor. Click <strong>Yes</strong>.</p>
+
+<p><img src="Images/microsoft-visual-studio-warning.png?raw=true" alt="Microsoft Visual Studio warning" title="Microsoft Visual Studio warning">
+</p>
+
+<p><em>Microsoft Visual Studio warning</em></p></li>
+<li><p>Switch back to the <strong>init.min.js</strong> file to verify that the file was updated with the new code.</p>
+
+<p><img src="Images/initminjs-file-updated.png?raw=true" alt="Init.min.js file updated" title="Init.min.js file updated">
+</p>
+
+<p><em>Init.min.js file updated</em></p></li>
+<li><p>Click the <strong>Browser Link Refresh</strong> button. </p></li>
+<li><p>Once both browsers are refreshed the audio players you saw in the previous task will start playing automatically.</p>
+
+<p><img src="Images/audio-player-included-in-view.png?raw=true" alt="Audio player included in view" title="Audio player included in view">
+</p>
+
+<p><em>Audio player included in view</em></p></li>
+</ol>
+
+<hr>
+
+<p><a name="Summary" /></p>
+
+<h2>Summary</h2>
+
+<p>By completing this hands-on lab you have learned how to:</p>
+
+<ul>
+<li>Use new HTML editor features included in Web Essentials such as rich HTML5 code snippets and Zen coding </li>
+<li>Use new CSS editor features included in Web Essentials such as the Color picker and Browser matrix tooltip </li>
+<li>Use new JavaScript editor features included in Web Essentials such as Extract to File and IntelliSense for all HTML elements </li>
+<li>Exchange data between your browser and Visual Studio using Browser Link</li>
+</ul>

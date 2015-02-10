@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Demo xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/ContentFramework.Core.Models">
+	<Id>DemoBuildAndDeployAspNet</Id>
+  <Technologies>
+		<Technology>ASP.NET MVC</Technology>
+    <Technology>Windows Azure</Technology>
+</Technologies>
+	<Author>
+    <Name>Jon Galloway</Name>
+    <Blog>http://weblogs.asp.net/jgalloway</Blog>
+    <Email>jon.galloway@microsoft.com</Email>
+  </Author>
+	<Description>This demo shows how to create an ASP.NET MVC application, add model objects, scaffold controllers, and deploy the application to Windows Azure Web Sites.</Description>
+	<Document ConversionType="Html">Demo.md</Document>
+	<Title>DEMO - GeekQuiz - Build and Deploy an ASP.NET Application</Title>
+	<Version>1.0.1</Version>
+	<Source>.\Source</Source>
+</Demo>
