@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace GeekQuiz.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -31,7 +31,14 @@ namespace GeekQuiz.Controllers
             return View();
         }
 
-        [Authorize]
+        public ActionResult VS()
+        {
+            ViewBag.Message = "Demo Visual Studio Tooling";
+
+            return View();
+        }
+
+        //[Authorize]
         public async Task<ActionResult> Statistics()
         {
             var db = new TriviaContext();
